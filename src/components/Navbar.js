@@ -2,7 +2,8 @@ import {Navbar, Button, Nav, Container} from 'react-bootstrap';
 import logo from "../assets/logo_action-01.png";
 import campana from "../assets/Vector.png";
 import {injected} from "./Web3Client"
-import { useWeb3React } from "@web3-react/core"
+import { Web3ReactProvider } from "@web3-react/core"
+import Web3 from "web3"
 import Connect from "./Connect"
 
 
