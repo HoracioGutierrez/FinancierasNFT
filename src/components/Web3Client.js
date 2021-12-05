@@ -124,9 +124,6 @@ const WalletCard = () => {
 
 	return (
     <div className='walletCard'>
-      {/* <h4> {"Connection to MetaMask using window.ethereum methods"} </h4> */}
-      {/* {{defaultAccount}.length > 0 ? {defaultAccount} : <Button id="connect-wallet" onClick={connectWalletHandler}>Connect Wallet</Button>} */}
-      {/* {miRender()} */}
       {defaultAccount !== null ? <p className="address-meta">{defaultAccount}</p> : <Button id="connect-wallet" onClick={connectWalletHandler}>Connect Wallet</Button>}
       {/* <button onClick={connectWalletHandler}>{connButtonText}</button>
       <div className='accountDisplay'>
