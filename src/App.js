@@ -8,15 +8,10 @@ import Web3 from "web3"
 
 const App = () => {
 
-  function getLibrary(provider) {
-    return new Web3(provider)
-  }
 
   return (
     <>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <MiNavbar {...pageProps}/>
-      </Web3ReactProvider>
+        <MiNavbar/>
     </>
   );
 }

@@ -1,10 +1,7 @@
 import {Navbar, Button, Nav, Container} from 'react-bootstrap';
 import logo from "../assets/logo_action-01.png";
 import campana from "../assets/Vector.png";
-import {injected} from "./Web3Client"
-import { Web3ReactProvider } from "@web3-react/core"
-import Web3 from "web3"
-import Connect from "./Connect"
+import WalletCard from "./Web3Client"
 
 
 const MiNavbar = () => {
@@ -23,10 +20,10 @@ const MiNavbar = () => {
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar className="campana"><img src={campana} alt="bell"/></Navbar>
-                    <Connect/>
+                    {/* <Button id="connect-wallet" onClick={connectWalletHandler}>Connect Wallet</Button> */}
+                    <WalletCard/>
                 </Container>
             </Navbar>
-            <init/>
         </>
     )
 }
