@@ -14,7 +14,9 @@ const App = () => {
     <>
         <MiNavbar/>
         {/* para logout */}
-        <button onClick={() => logout()} disabled={isAuthenticating}></button>
+        <div id="body" style={{backgroundColor: "#f0f2f5;"}}>
+          <button onClick={() => logout()} disabled={isAuthenticating}></button>
+        </div>
     </>
   );
 }

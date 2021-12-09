@@ -1,6 +1,17 @@
+#body{
+  background-color:#f0f2f5;
+  height: 100vh;
+}
+html{
+  overflow-y: hidden;
+}
+
 /*navbar*/
 .mi-navbar{
   height: 80px;
+}
+#mi-navbar{
+  background: red;
 }
 
 .logo-fintech{
@@ -17,13 +28,49 @@
   font-weight: 400;
   margin-bottom: 0;
 }
-
+/* 
 #connect-wallet{
   width: 210px;
   background-color: #0167B3;
   border-radius: 0.9rem;
   border: 0px;
   margin-right: 50px;
+} */
+#connect-wallet{
+  height: 42px;
+  padding: 0px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  border-radius: 12px;
+  border: 0px;
+  background-color: rgb(244, 244, 244);
+  cursor: pointer;
+  margin: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
+p{
+  font-size: 17px;
+  font-weight: 700;
+  font-family: Roboto, sans-serif;
+  color: rgb(47, 202, 230);
+  margin-bottom: 0 !important;
+}
+
+/* icono al lado del address */
+#canvasicon{
+  border-radius: 30px;
+  margin-left: 5px;
+}
+
+#frmtBalance{
+  font-size: 17px;
+  font-weight: 700;
+  font-family: Roboto, sans-serif;
+  color: #000000D6;
+  margin-right: 22px;
 }
 
 #nav-container{

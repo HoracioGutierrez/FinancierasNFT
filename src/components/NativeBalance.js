@@ -6,7 +6,7 @@ function NativeBalance() {
 
   const balanceNoFormat = Moralis.Units.FromWei(balance.balance, 18)
   const balanceFormateado = String(balanceNoFormat).slice(0, 5)
-  return <div>{balanceFormateado}</div>;
+  return <div id="frmtBalance">{balanceFormateado} ETH</div>;
 }
 
 export default NativeBalance;
