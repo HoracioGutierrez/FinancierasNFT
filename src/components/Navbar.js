@@ -1,11 +1,23 @@
-import {Navbar, Nav, Container} from 'react-bootstrap';
+import {Navbar, Nav, Container, Button} from 'react-bootstrap';
 import logo from "../assets/logo_action-01.png";
 import campana from "../assets/Vector.png";
-import WalletCard from "./Web3Client"
+import { useMoralis } from "react-moralis";
+import NativeBalance from './NativeBalance';
 
 
 const MiNavbar = () => {
 
+    const { authenticate, isAuthenticated, user } = useMoralis();
+
+    const balanceYAccount = () => {
+        return (
+            <>
+                <NativeBalance/>
+                <h3 id="ethaddress">{user.get("ethAddress")}</h3>
+            </>
+        )
+    }
+    
     return (
         <>
             <Navbar bg="light" expand="lg" className="mi-navbar me-auto">
@@ -20,8 +32,10 @@ const MiNavbar = () => {
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar className="campana"><img src={campana} alt="bell"/></Navbar>
-                    {/* <Button id="connect-wallet" onClick={connectWalletHandler}>Connect Wallet</Button> */}
-                    <WalletCard/>
+                    {/* <Button id="connect-wallet">Connect Wallet</Button> */}
+                    {/* <Button onClick={() => authenticate()} id="connect-wallet">Connect Wallet</Button> */}
+                    {/* <NativeBalance/> */}
+                    {!isAuthenticated ? <Button onClick={() => authenticate({signingMessage: "Action Fintech Authentication"})} id="connect-wallet">Connect Wallet</Button> : balanceYAccount() }
                 </Container>
             </Navbar>
         </>
