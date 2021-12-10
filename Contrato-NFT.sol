@@ -47,7 +47,9 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
     
     /**
-     * 
+     *@dev Implementacion de chequeo de NFT
+     *Chequea si el address es admin o no. 
+     *En caso de que no contenga los permisos se cortará la ejecución y se notificará al usuario
      */
     modifier hasAdminRole(address _adminAddress){
        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Esta cuenta no tiene permisos de admin");
@@ -55,7 +57,9 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
-     * 
+     *@dev Implementacion de chequeo de NFT
+     *Chequea si el address es minter o no. 
+     *En caso de que no contenga los permisos se cortará la ejecución y se notificará al usuario
      */
     modifier hasMinterRole(address _minterAddress){
         require(hasRole(MINTER_ROLE, msg.sender), "Esta cuenta no tiene permisos de minter");
@@ -63,7 +67,9 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
-     * 
+     *@dev Implementacion de chequeo de NFT
+     *Chequea si el address es financiera o no. 
+     *En caso de que no contenga los permisos se cortará la ejecución y se notificará al usuario
      */
     modifier hasFinancieraRole(address _financieraAddress){
         require(hasRole(FINANCIERA_ROLE, _financieraAddress), "Esta cuenta no tiene permisos de financiera");
@@ -71,37 +77,80 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
-     * 
+     * @dev Chequea que el address enviado por parametro sea Admin.
+     * En el caso que el address sea admin, retornará true
+     * Caso contraro contrario retornará false
+     */
+    function isInAdminRole(address _address) public view returns (bool){
+        if (hasRole(DEFAULT_ADMIN_ROLE, _address)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @dev Chequea que el address enviado por parametro sea Minter.
+     * En el caso que el address sea admin, retornará true
+     * Caso contraro contrario retornará false
+     */
+    function isInMinterRole(address _address) public view returns (bool){
+        if (hasRole(MINTER_ROLE, _address)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @dev Chequea que el address enviado por parametro sea Financiera.
+     * En el caso que el address sea admin, retornará true
+     * Caso contraro contrario retornará false
+     */
+    function isInFinancieraRole(address _address) public view returns (bool){
+        if (hasRole(FINANCIERA_ROLE, _address)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @dev Dado un address retorna la cantidad de nfts 
      */
     function getNftsInAddress() public view hasFinancieraRole(msg.sender) returns (uint[] memory){
         return nftsIdsInAddress[msg.sender];
     }
 
     /**
-     * 
+     * @dev Dado un address se le otorga el rol de minter
      */
     function setMinterRole(address _minterAddress) public hasAdminRole(msg.sender){
         grantRole(MINTER_ROLE,_minterAddress);
     }
 
     /**
-     * 
+     * @dev Dado un address se le quita el rol de minter
      */
     function removeMinterRole(address _minterAddress) public hasAdminRole(msg.sender) hasMinterRole(_minterAddress){
         revokeRole(MINTER_ROLE,_minterAddress);
     }
 
     /**
-     * 
+     * @dev Dado un address se le quita el rol de financiera
      */
     function removeFinancieraRole(address _minterAddress) public hasAdminRole(msg.sender) hasAdminRole(_minterAddress){
         revokeRole(FINANCIERA_ROLE,_minterAddress);
     }
 
     /**
-     * 
+     * @dev Dado un id de financiera se quita el addres de los mappings y del array de ids.
+     * burn -> @dev See {ERC721-ERC721}.
      */
     function quitarFinanciera(uint _idFinanciera) public hasAdminRole(msg.sender) hasFinancieraRole(fintechIdAddress[_idFinanciera]){
+
+        uint [] memory arrayNftsFinanciera = nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
+        // Borro los nfts 
+        for (uint i = 0; i < arrayNftsFinanciera.length; i++){
+            _burn(arrayNftsFinanciera[i]);
+        }
 
         delete nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
         removeFinancieraRole(fintechIdAddress[_idFinanciera]);
@@ -115,15 +164,25 @@ contract MyNFT is ERC721URIStorage, AccessControl {
                 break;
             }
         }
-        // Faltaria quemar los tokens
     }
     
-    function getArray() public view returns(uint[] memory){
+    /**
+     * @dev See {ERC721-ERC721}.
+     */
+    function quemarNft(uint _idNft) public hasAdminRole(msg.sender){
+        _burn(_idNft);
+
+    }
+
+    /**
+     * @dev Retorna el array con las ids de las financieras registradas 
+     */
+    function getArrayIdsFintech() public view returns(uint[] memory){
         return fintechId;
     }
 
     /**
-     * 
+     * @dev 
      */
     function devolverPagina(uint numeroDePag, uint tamanioDePagina) public view returns (uint[] memory){
         uint inicioDePagina = numeroDePag * tamanioDePagina;
