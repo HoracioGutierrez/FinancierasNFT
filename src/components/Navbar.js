@@ -4,7 +4,7 @@ import campana from "../assets/Vector.png";
 import { useMoralis } from "react-moralis";
 import NativeBalance from './NativeBalance';
 import CanvasIcon from "../assets/canvasicon.png";
-
+import {NavLink} from 'react-router-dom';
 
 const MiNavbar = () => {
 
@@ -33,9 +33,9 @@ const MiNavbar = () => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto links-nav">
-                            <Nav.Link href="#home"><p className="link-nav">Home</p></Nav.Link>
-                            <Nav.Link href="#link"><p className="link-nav">Explore</p></Nav.Link>
-                            <Nav.Link href="#link"><p className="link-nav">Marketplace</p></Nav.Link>
+                            <NavLink to="/"><Nav.Link href="#home"><p className="link-nav">Home</p></Nav.Link></NavLink>
+                            <NavLink to="/explore"><Nav.Link href="#link"><p className="link-nav">Explore</p></Nav.Link></NavLink>
+                            <NavLink to="/marketplace"><Nav.Link href="#link"><p className="link-nav">Marketplace</p></Nav.Link></NavLink>
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar className="campana"><img src={campana} alt="bell"/></Navbar>
