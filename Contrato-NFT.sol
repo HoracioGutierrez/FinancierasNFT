@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.10;
 
-//import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-//import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
@@ -225,10 +223,9 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *El token debe existir
      *Retorna un booleano en base a la comparación de la metadata
      */
-     
-    function compareMeta(string memory _metadata, uint _tokenNft) public view returns(bool){
-        bytes32 hashedMeta = keccak256(abi.encodePacked(_metadata));
-        if (hashedMeta == metadata[_tokenNft]) {
+     // Hay que ver como hasheamos y editarla
+    function compareMeta(bytes32 _hashMetadata, uint _tokenNft) public view returns(bool){
+        if (_hashMetadata == metadata[_tokenNft]) {
             return true;
         }
         return false;
@@ -257,11 +254,12 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      * NOTE: Se agrega al mapeo del tokenid la metadata ingresada previamente
      */
 
-    function mintNFT(address _recipient, string memory _tokenURI, string memory _jsonMeta) public hasMinterRole(msg.sender)
+    function mintNFT(address _recipient, string memory _tokenURI, bytes32 _hashMetadata) public hasMinterRole(msg.sender)
      returns (bytes32){
 
         tokenId += 1;
         nftsIdsInAddress[_recipient].push(tokenId);
+        metadata[tokenId] = _hashMetadata;
 
         _mint(_recipient, tokenId);
         _setTokenURI(tokenId, _tokenURI);
