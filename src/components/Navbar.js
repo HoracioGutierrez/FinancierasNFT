@@ -5,6 +5,8 @@ import { useMoralis } from "react-moralis";
 import NativeBalance from './NativeBalance';
 import CanvasIcon from "../assets/canvasicon.png";
 import {NavLink} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
+
 
 const MiNavbar = () => {
 
@@ -34,14 +36,11 @@ const MiNavbar = () => {
                         <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto links-nav">
                             <NavLink to="/"><Nav.Link href="#home"><p className="link-nav">Home</p></Nav.Link></NavLink>
-                            <NavLink to="/explore"><Nav.Link href="#link"><p className="link-nav">Explore</p></Nav.Link></NavLink>
-                            <NavLink to="/marketplace"><Nav.Link href="#link"><p className="link-nav">Marketplace</p></Nav.Link></NavLink>
+                            {isAuthenticated ? <NavLink to="/explore"><Nav.Link href="#home"><p className="link-nav">Explore</p></Nav.Link></NavLink> : <Redirect to="/login"/>}
+                            {isAuthenticated ? <NavLink to="/marketplace"><Nav.Link href="#home"><p className="link-nav">Marketplace</p></Nav.Link></NavLink> : <Redirect to="/login"/>}
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar className="campana"><img src={campana} alt="bell"/></Navbar>
-                    {/* <Button id="connect-wallet">Connect Wallet</Button> */}
-                    {/* <Button onClick={() => authenticate()} id="connect-wallet">Connect Wallet</Button> */}
-                    {/* <NativeBalance/> */}
                     {!isAuthenticated ? <Button onClick={() => authenticate({signingMessage: "Action Fintech Authentication"})} id="connect-wallet"><p>Connect Wallet</p></Button> : balanceYAccount() }
                 </Container>
             </Navbar>

@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useMoralis } from "react-moralis";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Prueba from './components/Prueba';
+import Login from './components/Login';
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
           <button onClick={() => logout()} disabled={isAuthenticating}></button>
           <Switch>
             <Route exact path="/marketplace" component={Prueba} />
+            <Route exact path="/login" component={Login} />
           </Switch>
         </div>
       </Router>
