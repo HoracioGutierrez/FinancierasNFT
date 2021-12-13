@@ -216,8 +216,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *Setea el numero de token de financiera en 1
      */
 
-    function getAddressFinanciera (uint _idFinanciera) public view returns(address){
-        require(hasRole(MINTER_ROLE, msg.sender), "Esta cuenta no tiene permiso");
+    function getAddressFinanciera (uint _idFinanciera) public view hasMinterRole(msg.sender) returns(address){
         return fintechIdAddress[_idFinanciera];
     }
 
@@ -262,7 +261,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      returns (bytes32){
 
         tokenId += 1;
-        metadata[tokenId] = keccak256(abi.encodePacked(_jsonMeta));
         nftsIdsInAddress[_recipient].push(tokenId);
 
         _mint(_recipient, tokenId);
