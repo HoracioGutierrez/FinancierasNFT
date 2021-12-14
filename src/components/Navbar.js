@@ -36,8 +36,9 @@ const MiNavbar = () => {
                         <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto links-nav">
                             <NavLink to="/"><Nav.Link href="#home"><p className="link-nav">Home</p></Nav.Link></NavLink>
-                            {isAuthenticated ? <NavLink to="/explore"><Nav.Link href="#home"><p className="link-nav">Explore</p></Nav.Link></NavLink> : <Redirect to="/login"/>}
-                            {isAuthenticated ? <NavLink to="/marketplace"><Nav.Link href="#home"><p className="link-nav">Marketplace</p></Nav.Link></NavLink> : <Redirect to="/login"/>}
+                            {isAuthenticated ? <NavLink to="/explore"><Nav.Link href="#home"><p className="link-nav">Explore</p></Nav.Link></NavLink> : null} 
+                            {isAuthenticated ? <NavLink to="/marketplace"><Nav.Link href="#home"><p className="link-nav">Marketplace</p></Nav.Link></NavLink> : null}
+                            {/* <Redirect to="/login"/> */}
                         </Nav>
                     </Navbar.Collapse>
                     <Navbar className="campana"><img src={campana} alt="bell"/></Navbar>
