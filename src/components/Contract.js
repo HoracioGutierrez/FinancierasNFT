@@ -13,6 +13,7 @@ export default function Contract() {
   const [responses, setResponses] = useState({});
   const { contractName, networks, abi } = contractInfo;
 
+  //@dev ESTO USA UNA NETWORK DE GANACHE!
   const contractAddress = useMemo(() => networks[1337].address, [networks]);
 
   /**Live query */
@@ -37,7 +38,7 @@ export default function Contract() {
     }; 
 
   return (
-    <div style={{ margin: "auto", display: "flex", gap: "20px", marginTop: "25", width: "70vw" }}>
+    <div style={{ margin: "60px auto auto", display: "flex", gap: "20px", marginTop: "25", width: "70vw" }}>
       <Card
         title={
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

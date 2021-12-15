@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getEllipsisTxt } from "../helpers/Formatters";
 import "./identicon.css";
 import { useMoralis } from "react-moralis";
