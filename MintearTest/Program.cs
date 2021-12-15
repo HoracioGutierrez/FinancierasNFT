@@ -26,8 +26,29 @@ namespace MintearTest
             public virtual string TokenURI { get; set; }
             [Parameter("bytes32", "_hashMetadata", 3)]
             public virtual byte[] HashMetadata { get; set; }
+            [Parameter("tuple", "_metadata", 4)]
+            public virtual Metadata Metadata { get; set; }
         }
 
+        public partial class Metadata : MetadataBase { }
+
+        public class MetadataBase
+        {
+            [Parameter("uint32", "autonumeriId", 1)]
+            public virtual uint autonumeriId { get; set; }
+            [Parameter("uint32", "loanId", 2)]
+            public virtual uint LoanId { get; set; }
+            [Parameter("uint32", "numeroDeCliente", 3)]
+            public virtual uint NumeroDeCliente { get; set; }
+            [Parameter("uint32", "fintechId", 4)]
+            public virtual uint FintechId { get; set; }
+            [Parameter("string", "fechaDeCreacion", 5)]
+            public virtual string FechaDeCreacion { get; set; }
+            [Parameter("string", "uriImagen", 6)]
+            public virtual string UriImagen { get; set; }
+            [Parameter("bytes32", "hashRegistroBase", 7)]
+            public virtual byte[] HashRegistroBase { get; set; }
+        }
 
         static void Main(string[] args)
         {
@@ -44,21 +65,29 @@ namespace MintearTest
             var web3 = new Web3(account, url);
 
             //GET CONTRACT
-            var contractAddress = "0x565dF65fC3b93C8500bEaB9C98c2A5E1F1Caae44";
+            var contractAddress = "0x8FF940f07ABF6eD210D40C44DA3300D7De9378E2";
             var contractHandler = web3.Eth.GetContractHandler(contractAddress);
 
             //CALL CONTRACT FUNCTION
             var recipient = "0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E";
-            var tokenURI = "QmPM65ATpFBPjegvJUkcZBgjWRGBvpxxw1bUc4QpP1db2N";
+            var tokenURI = "QmW927aJxsV6HiGtcTaY37YDqpEWGTgRjgqgBXMRnzxyb8";
             var hashMetadata = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E");
+
+            var metadata = new Metadata();
+            metadata.autonumeriId = 24;
+            metadata.LoanId = 1;
+            metadata.NumeroDeCliente = 2;
+            metadata.HashRegistroBase = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E");
+            metadata.FintechId = 4;
+            metadata.UriImagen = "hola";
+            metadata.FechaDeCreacion = "ayer";
 
             var mintNFTFunction = new MintNFTFunction();
             mintNFTFunction.Recipient = recipient;
             mintNFTFunction.TokenURI = tokenURI;
             mintNFTFunction.HashMetadata = hashMetadata;
+            mintNFTFunction.Metadata = metadata;
             var mintNFTFunctionTxnReceipt = contractHandler.SendRequestAndWaitForReceiptAsync(mintNFTFunction).Result;
-
-
 
 
             var response = JsonConvert.SerializeObject(mintNFTFunctionTxnReceipt);
