@@ -8,16 +8,30 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
     uint tokenId;
 
-    //Retorna el hash con la metadata, recibe el token de NFT
+    mapping (uint => Metadata) public __metadata;
+    //Mapping from token NFT ID to metadata hash.
     mapping (uint => bytes32) private metadata;
-    //Retorna address de la financiera, recibe el Id de la financiera
+    //Mapping from fintech Id to fitech address.
     mapping (uint => address) private fintechIdAddress;
-    //Retorna un array con los ids de los nfts de la cuenta ingresada
+    //Mapping from fintech address to array storing all NFT IDs minted to that account.
     mapping (address => uint[]) private nftsIdsInAddress;
-    //Array con los ids de las finteches ingresadas
+    //Stores id of the fintech added.
     uint [] public fintechId;
+    //
+    Metadata auxMetadata;
+
+    struct Metadata {
+        uint32 autonumericId;
+        uint32 loanId;
+        uint32 numeroDeCliente;
+        uint32 fintechId;
+        string fechaDeCreacion;
+        string uriImagen;
+        bytes32 hashRegistroBase;
+    }
 
     //Se inicializan los roles en forma de hash, a estos luego se les asignan addresses
+    //Initialiazing roles
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant FINANCIERA_ROLE = keccak256("FINANCIERA_ROLE");
 
@@ -33,24 +47,24 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
-     *@dev Implementacion de chequeo de NFT
-     *El address debería contener el token ingresado por parametro
+     *@dev Validates ownership of NTF
+     *Sender address should own the NFT assosiate to the token Id passed as argument.
      *Caso contrario de retorno del mapping, el address no contiene el token ingresado.
      *NOTE: ownerOf: @dev See {IERC721-ownerOf}.
      */
 
     modifier nftInAddress (uint _tokenNft){
-       require(ownerOf(_tokenNft) == msg.sender, "El address no es el duenio del token");
+       require(ownerOf(_tokenNft) == msg.sender, "This address does not posses this NFT");
        _;
     }
     
     /**
-     *@dev Implementacion de chequeo de NFT
-     *Chequea si el address es admin o no. 
+     *@dev Validates admin role.
+     *
      *En caso de que no contenga los permisos se cortará la ejecución y se notificará al usuario
      */
     modifier hasAdminRole(address _adminAddress){
-       require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Esta cuenta no tiene permisos de admin");
+       require(hasRole(DEFAULT_ADMIN_ROLE, _adminAddress), "Esta cuenta no tiene permisos de admin");
         _;
     }
 
@@ -60,7 +74,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *En caso de que no contenga los permisos se cortará la ejecución y se notificará al usuario
      */
     modifier hasMinterRole(address _minterAddress){
-        require(hasRole(MINTER_ROLE, msg.sender), "Esta cuenta no tiene permisos de minter");
+        require(hasRole(MINTER_ROLE, _minterAddress), "Esta cuenta no tiene permisos de minter");
         _;
     }
 
@@ -254,10 +268,11 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      * NOTE: Se agrega al mapeo del tokenid la metadata ingresada previamente
      */
 
-    function mintNFT(address _recipient, string memory _tokenURI, bytes32 _hashMetadata) public hasMinterRole(msg.sender)
+    function mintNFT(address _recipient, string memory _tokenURI, bytes32 _hashMetadata, Metadata memory _metadata) public hasMinterRole(msg.sender)
      returns (bytes32){
-
+        
         tokenId += 1;
+        __metadata[tokenId] = _metadata;
         nftsIdsInAddress[_recipient].push(tokenId);
         metadata[tokenId] = _hashMetadata;
 
