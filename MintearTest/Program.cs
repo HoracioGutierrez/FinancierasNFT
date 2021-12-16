@@ -53,36 +53,43 @@ namespace MintearTest
         }
         static void Main(string[] args)
         {
-            var metadata = new Metadata();
-            metadata.autonumeriId = 24;
-            metadata.LoanId = 1;
-            metadata.NumeroDeCliente = 2;
-            metadata.HashRegistroBase = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E");
-            metadata.FintechId = 4;
-            metadata.UriImagen = "hola";
-            metadata.FechaDeCreacion = "ayer";
 
             var tokenURI = "QmW927aJxsV6HiGtcTaY37YDqpEWGTgRjgqgBXMRnzxyb8";
 
-            
-            //Genero el pdf
-            var pdf = File.ReadAllBytes(@"C:\Users\Gabriel\Desktop\Facu\ALGO2-corrector\2021 2c\regimen_de_cursada.pdf");
+            //PDF TO IPFS
+            var pdf = File.ReadAllBytes(@"Files\contrato.pdf");
 
-            subirIpfs(pdf);
+            var pdfHash = subirIpfs(pdf);
 
-        //    mintearNft(metadata, tokenURI);
+            Console.WriteLine("Pdf Hash: " + pdfHash);
 
+            //
+
+            //MINTEAR
+            var metadata = new Metadata
+            {
+                autonumeriId = 24,
+                LoanId = 1,
+                NumeroDeCliente = 2,
+                HashRegistroBase = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E"),
+                FintechId = 4,
+                UriImagen = "hola",
+                FechaDeCreacion = "ayer"
+            };
+            //mintearNft(metadata, tokenURI);
+
+            Console.ReadKey();
         }
 
-        public static async void subirIpfs(byte[] archivo)
+        public static string subirIpfs(byte[] archivo)
         {
-
             MemoryStream stream = new MemoryStream(archivo);
 
             var ipfs = new IpfsClient(@"https://ipfs.infura.io:5001");
+
             var result = ipfs.FileSystem.AddAsync(stream).Result;
-            Console.WriteLine("aguante boca");
-            Console.WriteLine(result.Id);
+            
+            return result.Id.Hash.ToString();
         }
 
         public static async void mintearNft(Metadata metadata, string tokenURI)
