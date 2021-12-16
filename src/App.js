@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Prueba from './components/Prueba';
 import Login from './components/Login';
 import Contract from "./components/Contract"
+import NFTBalance from "./components/NFTBalance";
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
             <Route exact path="/marketplace" component={Prueba} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/contract" component={Contract} />
+            <Route exact path="/nftbalance" component={NFTBalance} />
           </Switch>
         </div>
       </Router>
