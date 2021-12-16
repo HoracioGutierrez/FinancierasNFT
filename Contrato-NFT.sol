@@ -8,9 +8,10 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
     uint tokenId;
 
-    mapping (uint => Metadata) public __metadata;
+    //Mapping from token NFT ID to metadata struct.
+    mapping (uint => Metadata) public structMetadata;
     //Mapping from token NFT ID to metadata hash.
-    mapping (uint => bytes32) private metadata;
+    mapping (uint => bytes32) private hashMetadataBase;
     //Mapping from fintech Id to fitech address.
     mapping (uint => address) private fintechIdAddress;
     //Mapping from fintech address to array storing all NFT IDs minted to that account.
@@ -239,7 +240,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      */
      // Hay que ver como hasheamos y editarla
     function compareMeta(bytes32 _hashMetadata, uint _tokenNft) public view returns(bool){
-        if (_hashMetadata == metadata[_tokenNft]) {
+        if (_hashMetadata == hashMetadataBase[_tokenNft]) {
             return true;
         }
         return false;
@@ -251,9 +252,34 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *Retorna el hash de la metadata asociado al tokenID del nft
      */
 
-    function getMetadata(uint _tokenNft) public view nftInAddress(_tokenNft) returns(bytes32){
-        return metadata[_tokenNft];
+    function getHashMetadataBase(uint _tokenNft) public view nftInAddress(_tokenNft) returns(bytes32){
+        return hashMetadataBase[_tokenNft];
     }
+
+    /**
+     * @dev See {IERC721-transferFrom}.
+     */
+    function transferNft(address _to, uint _nftId) public hasFinancieraRole(msg.sender) {
+
+        //Mapping from fintech address to array storing all NFT IDs minted to that account.
+        //mapping (address => uint[]) private nftsIdsInAddress;
+        
+        transferFrom(msg.sender, _to, _nftId);
+
+        uint [] memory arrayNftsFinanciera = nftsIdsInAddress[msg.sender];
+
+        for(uint i = 0; i < arrayNftsFinanciera.length; i++){
+            if (arrayNftsFinanciera[i] == _nftId){
+                uint aux = arrayNftsFinanciera[arrayNftsFinanciera.length-1];
+                arrayNftsFinanciera[i] = aux;
+                fintechId.pop();
+                //Preguntar si se lo pasa a otra financiera            
+                break;
+            }
+        }
+        
+    }
+
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
@@ -268,17 +294,17 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      * NOTE: Se agrega al mapeo del tokenid la metadata ingresada previamente
      */
 
-    function mintNFT(address _recipient, string memory _tokenURI, bytes32 _hashMetadata, Metadata memory _metadata) public hasMinterRole(msg.sender)
+    function mintNFT(address _recipient, string memory _tokenURI, Metadata memory _metadata) public hasMinterRole(msg.sender)
      returns (bytes32){
         
         tokenId += 1;
-        __metadata[tokenId] = _metadata;
+        structMetadata[tokenId] = _metadata;
         nftsIdsInAddress[_recipient].push(tokenId);
-        metadata[tokenId] = _hashMetadata;
+        hashMetadataBase[tokenId] = _metadata.hashRegistroBase;
 
         _mint(_recipient, tokenId);
         _setTokenURI(tokenId, _tokenURI);
 
-        return   metadata[tokenId];
+        return   hashMetadataBase[tokenId];
     }
 }
