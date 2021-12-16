@@ -1,4 +1,5 @@
 ﻿
+using Ipfs.Http;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.Contracts;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -7,6 +8,7 @@ using Nethereum.Web3.Accounts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,14 +51,41 @@ namespace MintearTest
             [Parameter("bytes32", "hashRegistroBase", 7)]
             public virtual byte[] HashRegistroBase { get; set; }
         }
-
         static void Main(string[] args)
         {
-            DoIt();
+            var metadata = new Metadata();
+            metadata.autonumeriId = 24;
+            metadata.LoanId = 1;
+            metadata.NumeroDeCliente = 2;
+            metadata.HashRegistroBase = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E");
+            metadata.FintechId = 4;
+            metadata.UriImagen = "hola";
+            metadata.FechaDeCreacion = "ayer";
+
+            var tokenURI = "QmW927aJxsV6HiGtcTaY37YDqpEWGTgRjgqgBXMRnzxyb8";
+
+            
+            //Genero el pdf
+            var pdf = File.ReadAllBytes(@"C:\Users\Gabriel\Desktop\Facu\ALGO2-corrector\2021 2c\regimen_de_cursada.pdf");
+
+            subirIpfs(pdf);
+
+        //    mintearNft(metadata, tokenURI);
 
         }
 
-        public static async void DoIt()
+        public static async void subirIpfs(byte[] archivo)
+        {
+
+            MemoryStream stream = new MemoryStream(archivo);
+
+            var ipfs = new IpfsClient(@"https://ipfs.infura.io:5001");
+            var result = ipfs.FileSystem.AddAsync(stream).Result;
+            Console.WriteLine("aguante boca");
+            Console.WriteLine(result.Id);
+        }
+
+        public static async void mintearNft(Metadata metadata, string tokenURI)
         {
             //INIT WEB3
             var privateKey = "0x9628316996948cf66bed79e797f9a5737a456ce478777454d2bd9df250c03bc3";
@@ -70,25 +99,12 @@ namespace MintearTest
 
             //CALL CONTRACT FUNCTION
             var recipient = "0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E";
-            var tokenURI = "QmW927aJxsV6HiGtcTaY37YDqpEWGTgRjgqgBXMRnzxyb8";
-            var hashMetadata = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E");
-
-            var metadata = new Metadata();
-            metadata.autonumeriId = 24;
-            metadata.LoanId = 1;
-            metadata.NumeroDeCliente = 2;
-            metadata.HashRegistroBase = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E");
-            metadata.FintechId = 4;
-            metadata.UriImagen = "hola";
-            metadata.FechaDeCreacion = "ayer";
 
             var mintNFTFunction = new MintNFTFunction();
-            mintNFTFunction.Recipient = recipient;
-            mintNFTFunction.TokenURI = tokenURI;
-            mintNFTFunction.HashMetadata = hashMetadata;
-            mintNFTFunction.Metadata = metadata;
+            mintNFTFunction.Recipient = recipient;  //Receptor del NFT
+            mintNFTFunction.TokenURI = tokenURI;    // Json del nft 
+            mintNFTFunction.Metadata = metadata;    // Metadata publica  
             var mintNFTFunctionTxnReceipt = contractHandler.SendRequestAndWaitForReceiptAsync(mintNFTFunction).Result;
-
 
             var response = JsonConvert.SerializeObject(mintNFTFunctionTxnReceipt);
             Console.WriteLine(response);

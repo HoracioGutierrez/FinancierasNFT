@@ -26,3 +26,46 @@ C:\Users\79\source\repos\MintearTest\bin\Debug\Newtonsoft.Json.xml
 C:\Users\79\source\repos\MintearTest\obj\Debug\MintearTest.csproj.CopyComplete
 C:\Users\79\source\repos\MintearTest\obj\Debug\MintearTest.exe
 C:\Users\79\source\repos\MintearTest\obj\Debug\MintearTest.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\MintearTest.exe.config
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\MintearTest.exe
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\MintearTest.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Common.Logging.Core.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Common.Logging.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Google.Protobuf.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Ipfs.Core.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Ipfs.Http.Client.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.ABI.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Accounts.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.BlockchainProcessing.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Contracts.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Hex.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.JsonRpc.Client.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.JsonRpc.RpcClient.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.KeyStore.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Model.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.RLP.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.RPC.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Signer.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Util.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Nethereum.Web3.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\SimpleBase.dll
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\BouncyCastle.Crypto.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Common.Logging.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Common.Logging.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Common.Logging.Core.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Common.Logging.Core.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Google.Protobuf.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Google.Protobuf.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Ipfs.Core.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Ipfs.Core.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Ipfs.Http.Client.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\bin\Debug\SimpleBase.pdb
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\obj\Debug\MintearTest.csproj.AssemblyReference.cache
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\obj\Debug\MintearTest.csproj.SuggestedBindingRedirects.cache
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\obj\Debug\MintearTest.csproj.CoreCompileInputs.cache
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\obj\Debug\MintearTest.csproj.CopyComplete
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\obj\Debug\MintearTest.exe
+C:\Users\Gabriel\Desktop\Actionfintech\Backend\visual studio back\MintearTest\obj\Debug\MintearTest.pdb
