@@ -8,6 +8,7 @@ using Nethereum.Web3.Accounts;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,9 +27,7 @@ namespace MintearTest
             public virtual string Recipient { get; set; }
             [Parameter("string", "_tokenURI", 2)]
             public virtual string TokenURI { get; set; }
-            [Parameter("bytes32", "_hashMetadata", 3)]
-            public virtual byte[] HashMetadata { get; set; }
-            [Parameter("tuple", "_metadata", 4)]
+            [Parameter("tuple", "_metadata", 3)]
             public virtual Metadata Metadata { get; set; }
         }
 
@@ -54,30 +53,64 @@ namespace MintearTest
         static void Main(string[] args)
         {
 
-            var tokenURI = "QmW927aJxsV6HiGtcTaY37YDqpEWGTgRjgqgBXMRnzxyb8";
+            var loanId = 10;
+            var nroCliente = 1;
+            var loanDate = DateTime.Now;
+            var fintechId = 2;
 
             //PDF TO IPFS
             var pdf = File.ReadAllBytes(@"Files\contrato.pdf");
 
             var pdfHash = subirIpfs(pdf);
 
-            Console.WriteLine("Pdf Hash: " + pdfHash);
+            Console.WriteLine("Pdf IPFS Hash: " + pdfHash);
 
-            //
+            //IMAGE TO IPFS
+            var logo = Image.FromFile(@"Files\logo.jpg");
+
+            var logoHash = subirIpfs(writeLogo(logo, loanId));
+
+            Console.WriteLine("Logo IPFS Hash: " + logoHash);
+
+            //GENERATE NFT JSON
+            var solseaJson = File.ReadAllText(@"Files\solsea_template_json.txt");
+
+            var nftName = "TeBancamos LOAN " + loanId + $" - {loanDate.ToShortDateString()} {loanDate.Hour}:{loanDate.Minute.ToString().PadLeft(2, '0')}:{loanDate.Second.ToString().PadLeft(2, '0')}";
+            var nftDescription = "I am a description!";
+
+            solseaJson = solseaJson
+                        .Replace("{{NAME}}", nftName)
+                        .Replace("{{DESCRIPTION}}", nftDescription)
+                        .Replace("{{IMAGE_HASH}}", logoHash)
+                        .Replace("{{LOAN_LOANID}}", loanId.ToString())
+                        .Replace("{{LOAN_NROCLIENT}}", nroCliente.ToString())
+                        .Replace("{{LOAN_DATE}}", loanDate.ToString("dd-mm-yyyy"))
+                        .Replace("{{LOAN_FINTECHID}}", fintechId.ToString());
+
+            var jsonHash = subirIpfs(Encoding.UTF8.GetBytes(solseaJson));
+
+            Console.WriteLine(solseaJson);
+            Console.WriteLine("NFT Json IPFS Hash: " + jsonHash);
 
             //MINTEAR
+            Console.WriteLine("Starting Minting...");
+
             var metadata = new Metadata
             {
                 autonumeriId = 24,
-                LoanId = 1,
-                NumeroDeCliente = 2,
+                LoanId = (uint)loanId,
+                NumeroDeCliente = (uint)nroCliente,
                 HashRegistroBase = HexByteConvertorExtensions.HexToByteArray("0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E"),
-                FintechId = 4,
+                FintechId = (uint)fintechId,
                 UriImagen = "hola",
-                FechaDeCreacion = "ayer"
+                FechaDeCreacion = loanDate.ToShortDateString()
             };
-            //mintearNft(metadata, tokenURI);
 
+            var recipient = "0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E"; //Address financiera
+
+            mintearNft(metadata, recipient, jsonHash);
+
+            Console.WriteLine("Finish!");
             Console.ReadKey();
         }
 
@@ -92,7 +125,35 @@ namespace MintearTest
             return result.Id.Hash.ToString();
         }
 
-        public static async void mintearNft(Metadata metadata, string tokenURI)
+        public static byte[] writeLogo(Image logo, int number)
+        {
+            PointF firstLocation = new PointF(20f, 20f);
+
+            Bitmap newBitmap;
+            using (var bitmap = (Bitmap)logo)
+            {
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                {
+                    using (Font arialFont = new Font("Arial", 40))
+                    {
+                        graphics.DrawString(number.ToString(), arialFont, new SolidBrush(Color.FromArgb(255,255,255)), firstLocation);
+                    }
+                }
+                newBitmap = new Bitmap(bitmap);
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                newBitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+
+                newBitmap.Save("logoEscrito.png");
+                newBitmap.Dispose();
+
+                return stream.ToArray();
+            }
+        }
+
+        public static async void mintearNft(Metadata metadata, string recipient, string tokenURI)
         {
             //INIT WEB3
             var privateKey = "0x9628316996948cf66bed79e797f9a5737a456ce478777454d2bd9df250c03bc3";
@@ -101,16 +162,17 @@ namespace MintearTest
             var web3 = new Web3(account, url);
 
             //GET CONTRACT
-            var contractAddress = "0x8FF940f07ABF6eD210D40C44DA3300D7De9378E2";
+            var contractAddress = "0x3EFbab2e1675fd3397C28A8CC82Be4aee0d574E5";
             var contractHandler = web3.Eth.GetContractHandler(contractAddress);
 
             //CALL CONTRACT FUNCTION
-            var recipient = "0x87d43F463118cbcaC8Cf9F31f2C824dE02C3AD8E";
+            var mintNFTFunction = new MintNFTFunction
+            {
+                Recipient = recipient,  //Receptor del NFT
+                TokenURI = tokenURI,    //Json del nft 
+                Metadata = metadata    //Metadata publica  
+            };
 
-            var mintNFTFunction = new MintNFTFunction();
-            mintNFTFunction.Recipient = recipient;  //Receptor del NFT
-            mintNFTFunction.TokenURI = tokenURI;    // Json del nft 
-            mintNFTFunction.Metadata = metadata;    // Metadata publica  
             var mintNFTFunctionTxnReceipt = contractHandler.SendRequestAndWaitForReceiptAsync(mintNFTFunction).Result;
 
             var response = JsonConvert.SerializeObject(mintNFTFunctionTxnReceipt);

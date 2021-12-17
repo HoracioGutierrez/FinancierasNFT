@@ -112,3 +112,5 @@ C:\Users\79\Desktop\Action Fintech\FinancierasNFT\MintearTest\obj\Debug\MintearT
 C:\Users\79\Desktop\Action Fintech\FinancierasNFT\MintearTest\obj\Debug\MintearTest.exe
 C:\Users\79\Desktop\Action Fintech\FinancierasNFT\MintearTest\obj\Debug\MintearTest.pdb
 C:\Users\79\Desktop\Action Fintech\FinancierasNFT\MintearTest\bin\Debug\Files\contrato.pdf
+C:\Users\79\Desktop\Action Fintech\FinancierasNFT\MintearTest\bin\Debug\Files\solsea_template_json.txt
+C:\Users\79\Desktop\Action Fintech\FinancierasNFT\MintearTest\bin\Debug\Files\logo.jpg

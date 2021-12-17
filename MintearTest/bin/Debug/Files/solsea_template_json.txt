@@ -1,0 +1,23 @@
+{
+  "name": "{{NAME}}",
+  "description": "{{DESCRIPTION}}",
+  "image": "https://ipfs.io/ipfs/{{IMAGE_HASH}}",
+  "attributes": [
+    {
+      "trait_type": "LoanId",
+      "value": {{LOAN_LOANID}}
+    },
+    {
+      "trait_type": "NroCliente",
+      "value": {{LOAN_NROCLIENT}}
+    },
+    {
+      "trait_type": "Fecha contrato",
+      "value": "{{LOAN_DATE}}"
+    },
+    {
+      "trait_type": "Fintechid",
+      "value": {{LOAN_FINTECHID}}
+    }
+  ]
+}
