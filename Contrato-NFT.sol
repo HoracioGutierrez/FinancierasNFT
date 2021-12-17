@@ -8,14 +8,19 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
     uint tokenId;
 
+
     //Mapping from token NFT ID to metadata struct.
     mapping (uint => Metadata) public structMetadata;
     //Mapping from token NFT ID to metadata hash.
     mapping (uint => bytes32) private hashMetadataBase;
+    //Mapping from fintech address to array storing all metadata hash of all NFT Id.
+    mapping (address => bytes32[]) private hashVecMetadataBaseInAddress;
     //Mapping from fintech Id to fitech address.
     mapping (uint => address) private fintechIdAddress;
     //Mapping from fintech address to array storing all NFT IDs minted to that account.
     mapping (address => uint[]) private nftsIdsInAddress;
+    //Stores a descriptions of the minter address
+    mapping (address => string) private descriptionMinterInAddress;
     //Stores id of the fintech added.
     uint [] public fintechId;
     //
@@ -31,6 +36,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         bytes32 hashRegistroBase;
     }
 
+    //Constructor
+    /*************************************************************************************************************************************/
     //Se inicializan los roles en forma de hash, a estos luego se les asignan addresses
     //Initialiazing roles
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -46,6 +53,16 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
+
+    /*************************************************************************************************************************************/
+
+
+
+
+
+    //Modifiers & verifications
+    /*************************************************************************************************************************************/
+
 
     /**
      *@dev Validates ownership of NTF
@@ -125,25 +142,52 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         return false;
     }
 
-    /**
-     * @dev Dado un address retorna la cantidad de nfts 
-     */
-    function getNftsInAddress() public view hasFinancieraRole(msg.sender) returns (uint[] memory){
-        return nftsIdsInAddress[msg.sender];
-    }
+    /*************************************************************************************************************************************/
+
+
+
+
+
+    //Setters
+    /*************************************************************************************************************************************/
+
 
     /**
      * @dev Dado un address se le otorga el rol de minter
      */
-    function setMinterRole(address _minterAddress) public hasAdminRole(msg.sender){
+    function setMinterRole(address _minterAddress, string memory _description) public hasAdminRole(msg.sender){
         grantRole(MINTER_ROLE,_minterAddress);
+        descriptionMinterInAddress[_minterAddress] = _description;
     }
+
+    /**
+     *@dev Implementacion de agregado de permisos a address de financiera
+     *El address no debería estar registrado
+     *Setea el numero de token de financiera en 1
+     */
+
+    function agregarFinanciera (address _address, uint16 _fintechId) public hasAdminRole(msg.sender){
+        require(!hasRole(FINANCIERA_ROLE, _address), "La financiera ya esta registrada"); 
+        fintechIdAddress[_fintechId] = _address;
+        grantRole(FINANCIERA_ROLE, _address);
+        fintechId.push(_fintechId);
+    }
+
+    /*************************************************************************************************************************************/
+
+
+
+
+
+    //Removers
+    /*************************************************************************************************************************************/
 
     /**
      * @dev Dado un address se le quita el rol de minter
      */
     function removeMinterRole(address _minterAddress) public hasAdminRole(msg.sender) hasMinterRole(_minterAddress){
         revokeRole(MINTER_ROLE,_minterAddress);
+        delete descriptionMinterInAddress[_minterAddress];
     }
 
     /**
@@ -157,14 +201,15 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      * @dev Dado un id de financiera se quita el addres de los mappings y del array de ids.
      * burn -> @dev See {ERC721-ERC721}.
      */
-    function quitarFinanciera(uint _idFinanciera) public hasAdminRole(msg.sender) hasFinancieraRole(fintechIdAddress[_idFinanciera]){
+    function removeFinanciera(uint _idFinanciera) public hasAdminRole(msg.sender) hasFinancieraRole(fintechIdAddress[_idFinanciera]){
 
         uint [] memory arrayNftsFinanciera = nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
         // Borro los nfts 
         for (uint i = 0; i < arrayNftsFinanciera.length; i++){
             _burn(arrayNftsFinanciera[i]);
         }
-
+        
+        delete hashVecMetadataBaseInAddress[fintechIdAddress[_idFinanciera]];
         delete nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
         removeFinancieraRole(fintechIdAddress[_idFinanciera]);
         delete fintechIdAddress[_idFinanciera];
@@ -178,7 +223,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
             }
         }
     }
-    
+
     /**
      * @dev See {ERC721-ERC721}.
      */
@@ -187,11 +232,28 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
     }
 
+    /*************************************************************************************************************************************/
+    
+
+
+
+
+    //Getters
+    /*************************************************************************************************************************************/
+
+
     /**
      * @dev Retorna el array con las ids de las financieras registradas 
      */
     function getArrayIdsFintech() public view returns(uint[] memory){
         return fintechId;
+    }
+    
+    /**
+     * @dev Dado un address retorna la cantidad de nfts 
+     */
+    function getNftsInAddress() public view hasFinancieraRole(msg.sender) returns (uint[] memory){
+        return nftsIdsInAddress[msg.sender];
     }
 
     /**
@@ -208,19 +270,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         }
 
         return arrayDeRetorno;
-    }
-
-    /**
-     *@dev Implementacion de agregado de permisos a address de financiera
-     *El address no debería estar registrado
-     *Setea el numero de token de financiera en 1
-     */
-
-    function agregarFinanciera (address _address, uint16 _fintechId) public hasAdminRole(msg.sender){
-        require(!hasRole(FINANCIERA_ROLE, _address), "La financiera ya esta registrada"); 
-        fintechIdAddress[_fintechId] = _address;
-        grantRole(FINANCIERA_ROLE, _address);
-        fintechId.push(_fintechId);
     }
 
     /**
@@ -257,6 +306,33 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
+     *@dev Implementacion de retorno de la metadata codificada para todo el array de nfts de la direccion
+     *El token debe existir, solo puede ejectutar la cuenta dueña del nft
+     *Retorna el hash de la metadata asociado a los tokenID del vector de nfts
+     */
+
+    function getVecHashMetadataBaseInAddress(address _address) public view returns(bytes32[] memory){
+        return hashVecMetadataBaseInAddress[_address];
+    }
+
+    /**
+     *@dev Retorna la descripción asociada al minter
+     */
+
+    function getDescriptionMinter(address _minterAddress) public view returns(string memory){
+        return descriptionMinterInAddress[_minterAddress];
+    }
+
+    /*************************************************************************************************************************************/
+
+
+
+
+    
+    //Transfer
+    /*************************************************************************************************************************************/
+
+    /**
      * @dev See {IERC721-transferFrom}.
      */
     function transferNft(address _to, uint _nftId) public hasFinancieraRole(msg.sender) {
@@ -266,20 +342,30 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         
         transferFrom(msg.sender, _to, _nftId);
 
+        nftsIdsInAddress[_to].push(_nftId);
+
         uint [] memory arrayNftsFinanciera = nftsIdsInAddress[msg.sender];
 
         for(uint i = 0; i < arrayNftsFinanciera.length; i++){
             if (arrayNftsFinanciera[i] == _nftId){
                 uint aux = arrayNftsFinanciera[arrayNftsFinanciera.length-1];
                 arrayNftsFinanciera[i] = aux;
-                fintechId.pop();
-                //Preguntar si se lo pasa a otra financiera            
+                nftsIdsInAddress[msg.sender].pop();      //Chequear si al transferir funciona
                 break;
             }
         }
         
     }
 
+    /*************************************************************************************************************************************/
+
+
+
+
+
+
+    //Mint
+    /*************************************************************************************************************************************/
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
@@ -301,10 +387,13 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         structMetadata[tokenId] = _metadata;
         nftsIdsInAddress[_recipient].push(tokenId);
         hashMetadataBase[tokenId] = _metadata.hashRegistroBase;
+        hashVecMetadataBaseInAddress[_recipient].push(_metadata.hashRegistroBase);
 
         _mint(_recipient, tokenId);
         _setTokenURI(tokenId, _tokenURI);
 
         return   hashMetadataBase[tokenId];
     }
+
+    /*************************************************************************************************************************************/
 }
