@@ -4,7 +4,7 @@ import { Card, Image, Tooltip, Modal, Input, Skeleton } from "antd";
 import { FileSearchOutlined, SendOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { getExplorer } from "./helpers/networks";
 import AddressInput from "./AddressInput";
-import { useVerifyMetadata } from "hooks/useVerifyMetadata";
+import useVerifyMetadata from "./hooks/useVerifyMetadata";
 
 const { Meta } = Card;
 
