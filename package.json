@@ -28,7 +28,8 @@
     {
       "from": "./build/contracts/MetaCoin.json",
       "to": "./src/contracts/contractInfo.json"
-    }],
+    }
+  ],
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

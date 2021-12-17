@@ -288,3 +288,66 @@ p{
   text-align: left;
 }
 
+/*seccion start*/
+#nav-container-start{
+  background: transparent;
+  z-index: 1;
+}
+
+#start-navbar{
+  background: transparent;
+  z-index: 1;
+}
+
+#start-connect{
+  height: 37px;
+  padding: 0px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 230px;
+  border-radius: 12px;
+  border: 0px;
+  background-color: rgb(57, 24, 148);
+  cursor: pointer;
+  margin: 15px 0 0 0;
+  z-index:1;
+}
+
+button p {
+  color: #fff;
+}
+
+#circulo-container{
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.circulo-container{
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.fondo-redondo{
+  z-index: -1;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+#blockchain-design{
+  margin-right: 120px;
+}
+
+
+/* 
+.container-start{
+  background-image: url(./assets/assetsInicio/FondoRedondo.svg);
+} */

@@ -7,6 +7,7 @@ import Prueba from './components/Prueba';
 import Login from './components/Login';
 import Contract from "./components/Contract"
 import NFTBalance from "./components/NFTBalance";
+import Start from './components/Start';
 
 
 const App = () => {
@@ -18,17 +19,18 @@ const App = () => {
   return (
     <>
       <Router>
-        <MiNavbar/>
+        {/* <MiNavbar/> */}
         {/* para logout */}
-        <div id="body" style={{backgroundColor: "#f0f2f5;"}}>
-          <button onClick={() => logout()} disabled={isAuthenticating}></button>
+        {/* <div id="body" style={{backgroundColor: "#f0f2f5;"}}> */}
+          {/* <button onClick={() => logout()} disabled={isAuthenticating}></button> */}
           <Switch>
+            <Route exact path="/start" component={Start}/>
             <Route exact path="/marketplace" component={Prueba} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/contract" component={Contract} />
             <Route exact path="/nftbalance" component={NFTBalance} />
           </Switch>
-        </div>
+        {/* </div> */}
       </Router>
     </>
   );
