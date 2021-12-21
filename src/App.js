@@ -16,6 +16,13 @@ const App = () => {
   
   const { logout, isAuthenticating } = useMoralis();
 
+  const startComp = () => { 
+    <Route exact path="/start" component={Start}/>
+  }
+  const pruebaComp = () => { 
+    <Route exact path="/" component={Prueba}/>
+  }
+
   return (
     <>
       <Router>
@@ -24,7 +31,7 @@ const App = () => {
         {/* <div id="body" style={{backgroundColor: "#f0f2f5;"}}> */}
           {/* <button onClick={() => logout()} disabled={isAuthenticating}></button> */}
           <Switch>
-            <Route exact path="/start" component={Start}/>
+            {!isAuthenticated ? startComp() : pruebaComp() }
             <Route exact path="/marketplace" component={Prueba} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/contract" component={Contract} />
