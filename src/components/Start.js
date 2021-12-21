@@ -20,12 +20,8 @@ const Start = () => {
 
     return (
         <div className="container-start">
-            <Navbar bg="white" expand="lg" className="mi-navbar me-auto" id="start-navbar">
-                <Container id="nav-container-start">
-                    <LogoAction width={150} height={75}/>
+                    <LogoAction width={150} height={75} id="logo-start"/>
                     {!isAuthenticated ? <Button onClick={() => authenticate({signingMessage: "Action Fintech Authentication"})} id="start-connect"><p>Connect Wallet</p></Button> : redirect() }
-                </Container>
-            </Navbar>
             <div id="circulo-container">
                 <div className="circulo-container">
                     <BlockchainDesign id="blockchain-design" width={700} height={700}/>
