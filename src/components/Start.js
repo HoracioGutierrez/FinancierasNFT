@@ -31,14 +31,16 @@ const Start = () => {
                 </div>
             </div>
 
-            <div id="texto-start">
-                <h1 id="acceso-nft">
-                    Acceso a NFT de
-                    <br />
-                    contratos
-                </h1>
+            <div id="start-container">
+                <div id="texto-start">
+                    <h1 id="acceso-nft">
+                        Acceso a NFT de
+                        <br />
+                        contratos
+                    </h1>
 
-                <Button onClick={() => authenticate({ signingMessage: "Action Fintech Authentication" })} id="login-start"><p id="login-text">LOGIN</p></Button>
+                    <Button onClick={() => authenticate({ signingMessage: "Action Fintech Authentication" })} id="login-start"><p id="login-text">LOGIN</p></Button>
+                </div>
             </div>
         </>
     )

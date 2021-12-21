@@ -326,33 +326,12 @@ p{
   right: 0;
   top: 0;
 }
-#login-start{
-  height: 47px;
-  padding: 0px 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 270px;
-  border-radius: 6px;
-  border: 0px;
-  background-color: #6c55d6;
-  cursor: pointer;
-  z-index:1;
-  margin: 50px 0 0 145px;
-}
 
 button p {
   color: #fff;
   font-family: 'Roboto Condensed', sans-serif;
   font-weight: 500;
   font-size: 1.1rem;
-}
-
-#login-text{
-  color: #fff;
-  font-family: 'Roboto Condensed', sans-serif;
-  font-weight: 500;
-  font-size: 1.3rem;
 }
 
 #circulo-container{
@@ -386,6 +365,7 @@ button p {
   margin-top: 70px;
 }
 
+
 /*Texto principal seccion start*/
 #acceso-nft{
   font-family: 'Roboto Condensed', sans-serif;
@@ -395,5 +375,39 @@ button p {
   color: rgba(58, 54, 54, 0.85);
   display: flex;
   justify-content: left;
-  margin: 200px 0 0 90px;
+}
+
+#texto-start{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#login-start{
+  height: 47px;
+  padding: 0px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 270px;
+  border-radius: 6px;
+  border: 0px;
+  background-color: #6c55d6;
+  cursor: pointer;
+  z-index:1;
+  margin-top: 30px;
+}
+
+#login-text{
+  color: #fff;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 1.3rem;
+}
+
+#start-container{
+  display: flex;
+  justify-content: left;
+  margin: 200px 0 0 80px;
 }
