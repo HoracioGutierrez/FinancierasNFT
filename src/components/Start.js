@@ -24,7 +24,7 @@ const Start = () => {
                     {!isAuthenticated ? <Button onClick={() => authenticate({signingMessage: "Action Fintech Authentication"})} id="start-connect"><p>Connect Wallet</p></Button> : redirect() }
             <div id="circulo-container">
                 <div className="circulo-container">
-                    <BlockchainDesign id="blockchain-design" width={700} height={700}/>
+                    <BlockchainDesign id="blockchain-design" width={600} height={600}/>
                     <FondoRedondo className="fondo-redondo" width={700} height={700}/>
                 </div>
             </div>

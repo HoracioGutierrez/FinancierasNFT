@@ -315,9 +315,9 @@ p{
   width: 230px;
   border-radius: 12px;
   border: 0px;
-  background-color: rgb(57, 24, 148);
+  background-color: #6c55d6;
   cursor: pointer;
-  margin: 25px 100px 0 0;
+  margin: 32px 100px 0 0;
   z-index:1;
   position: absolute;
   right: 0;
@@ -355,7 +355,8 @@ button p {
 }
 
 #blockchain-design{
-  margin-right: 120px;
+  margin-right: 80px;
+  margin-top: 70px;
 }
 
 
