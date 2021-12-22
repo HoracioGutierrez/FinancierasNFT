@@ -34,7 +34,7 @@ const App = () => {
   return (
     <>
       <Router>
-         <MiNavbar/> 
+         {/* <MiNavbar/>  */}
         {/* para logout */}
         {/* <div id="body" style={{backgroundColor: "#f0f2f5;"}}> */}
           {/* <button onClick={() => logout()} disabled={isAuthenticating}></button> */}

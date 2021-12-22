@@ -14,7 +14,7 @@ export default function Contract() {
   const { contractName, networks, abi } = contractInfo;
 
   //@dev ESTO USA UNA NETWORK DE GANACHE!
-  const contractAddress = useMemo(() => networks[1337].address, [networks]);
+  const contractAddress = useMemo(() => networks[4].address, [networks]);
 
   /**Live query */
   const { data } = useMoralisQuery("Events", (query) => query, [], {
