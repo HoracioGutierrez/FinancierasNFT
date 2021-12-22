@@ -13,7 +13,7 @@ export default function Contract() {
   const [responses, setResponses] = useState({});
   const { contractName, networks, abi } = contractInfo;
 
-  //@dev ESTO USA UNA NETWORK DE GANACHE!
+  //@dev network tries to connect to rinkeby testnet(chain rpc 4)
   const contractAddress = useMemo(() => networks[4].address, [networks]);
 
   /**Live query */
