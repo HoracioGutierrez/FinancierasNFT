@@ -23,8 +23,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     mapping (address => string) private descriptionMinterInAddress;
     //Stores id of the fintech added.
     uint [] public fintechId;
-    //
-    Metadata auxMetadata;
 
     struct Metadata {
         uint32 autonumericId;
@@ -206,6 +204,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         uint [] memory arrayNftsFinanciera = nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
         // Borro los nfts 
         for (uint i = 0; i < arrayNftsFinanciera.length; i++){
+            delete structMetadata[arrayNftsFinanciera[i]];
+            delete hashMetadataBase[arrayNftsFinanciera[i]];
             _burn(arrayNftsFinanciera[i]);
         }
         
@@ -301,7 +301,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *Retorna el hash de la metadata asociado al tokenID del nft
      */
 
-    function getHashMetadataBase(uint _tokenNft) public view nftInAddress(_tokenNft) returns(bytes32){
+    function getHashMetadataHashBase(uint _tokenNft) public view nftInAddress(_tokenNft) returns(bytes32){
         return hashMetadataBase[_tokenNft];
     }
 
@@ -381,6 +381,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      */
 
     function mintNFT(address _recipient, string memory _tokenURI, Metadata memory _metadata) public hasMinterRole(msg.sender)
+                                                                                                    hasFinancieraRole(_recipient) 
      returns (bytes32){
         
         tokenId += 1;
