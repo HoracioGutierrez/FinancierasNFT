@@ -1,6 +1,7 @@
 import './App.css';
 import MiNavbar from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { useMoralis } from "react-moralis";
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Prueba from './components/Prueba';
@@ -11,13 +12,14 @@ import Start from './components/Start';
 import TableNFT from './components/TableNFT';
 import FintechList from './components/FintechList';
 import MinterList from './components/MinterList';
+import Paginator from './components/Paginator';
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 </style>
 
 
 const App = () => {
-
+  
   const { authenticate, isAuthenticated, user } = useMoralis();
   
   const { logout, isAuthenticating } = useMoralis();
@@ -29,7 +31,7 @@ const App = () => {
     return <Route exact path="/" component={Prueba}/>
   }
   
-
+  
 
   return (
     <>
@@ -47,6 +49,7 @@ const App = () => {
             <Route exact path="/tablenft" component={TableNFT} />
             <Route exact path="/fintechlist" component={FintechList} />
             <Route exact path="/minterlist" component={MinterList} />
+            <Route exact path="/paginator" component={Paginator} />
           </Switch>
         {/* </div> */}
       </Router>

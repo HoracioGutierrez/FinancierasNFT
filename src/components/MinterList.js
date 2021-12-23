@@ -8,7 +8,9 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Input, Row, Col, Button, Space } from "antd";
+import { Input, Row, Col, Space } from "antd";
+import Button from '@mui/material/Button';
+import Moralis from 'moralis';
 
 import { useContext } from "react";
 import  {context} from './ModalProvider'
@@ -18,6 +20,17 @@ import "./styles/FintechList.css";
 function createData(minter, address) {
   return { minter, address };
 }
+async function getJson(){
+const response = await fetch('https://wj0omlye4aky.usemoralis.com:2053/server/classes/Metadata', {
+  method: 'GET',
+  headers: {
+      'X-Parse-Application-Id': 'QaWiHgr7Cyn8eLXGWgK5lnC9nO6vBjfULK2Hq2b5'
+      }
+  });
+  const myJson = await response.json(); //extract JSON from the http response
+  // do something with myJson
+  console.log(myJson);
+}
 
 const rows = [
   createData(1, "0xe123453434534535"),
@@ -25,6 +38,8 @@ const rows = [
 ];
 
 const MinterList = () => {
+
+  getJson();
 
 //   const {openModal} = useContext(context)
 
@@ -57,7 +72,7 @@ const MinterList = () => {
                      
                   </TableCell>
                   <TableCell component="tr" align="center">
-                  <Button type="default" shape="round" >
+                  <Button type="default" shape="round" color="error">
                          Borrar
                  </Button>
                   </TableCell>
@@ -66,30 +81,33 @@ const MinterList = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <br/>
+        <h3 className="subtitle">Gestión de Minters</h3>
+        <h4 className="infoSubtitle">Minters</h4>
 
-        <h3>Gestión de Minters</h3>
-        <h4>Minters</h4>
-        <Row>
-          <Col
+        <Stack direction="row" spacing={2}>
+        
+          <Row
             span={6}
             style={{ marginRight: "20px", border: "1px solid gray" }}
           >
             <Input placeholder="Referencia" />
-          </Col>
+          </Row>
 
-          <Col
+          <Row
             span={6}
             style={{ marginRight: "20px", border: "1px solid gray" }}
           >
             <Input placeholder="Address" />
-          </Col>
+          </Row>
 
-          <Col span={6} style={{ marginRight: "20px" }}>
-            <Button type="primary" shape="round">
+          <Row span={6} style={{ marginRight: "20px" }}>
+            <Button variant="contained" shape="round">
               Ingresar Minter
             </Button>
-          </Col>
-        </Row>
+          </Row>
+        
+        </Stack>
       </Stack>
     </>
   );
