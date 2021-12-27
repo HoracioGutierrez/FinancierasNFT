@@ -49,8 +49,8 @@ export default function TableNFT() {
     // do something with myJson
     setFinancieras(results);
   }
-
-
+ 
+ 
 
   const handleChange = (event) => {
     setFilter(event.target.value);
@@ -90,8 +90,11 @@ export default function TableNFT() {
           justifyContent="flex-end"
           alignItems="center"
         >
-          <TableRowsIcon style={{ color: "#663DBD" }} />
-          <GridViewIcon style={{ color: "#663DBD" }} />
+          <a href="#" id="list" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-th-list">
+            </span><TableRowsIcon style={{ color: "#663DBD" }} /></a> <a href="#" id="grid" class="btn btn-default btn-sm"><span
+                class="glyphicon glyphicon-th"></span><GridViewIcon style={{ color: "#663DBD" }} /></a>
+          
+          
         </Stack>
         <br />
         <TableContainer component={Paper}>
@@ -109,7 +112,6 @@ export default function TableNFT() {
                 <TableCell style={{ color: "white" }}>Monto Prestamo</TableCell>
                 <TableCell style={{ color: "white" }}>Fecha</TableCell>
                 <TableCell style={{ color: "white" }}>Actions</TableCell>
-            
               </TableRow>
             </TableHead>
             <TableBody>
@@ -138,7 +140,7 @@ export default function TableNFT() {
           </Table>
         </TableContainer>
         <Pagination className="paginador" count={5} />
-      </Stack>
+</Stack>
     </>
   );
 }

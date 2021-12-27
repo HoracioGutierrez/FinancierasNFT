@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { useContext , useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
@@ -11,37 +13,79 @@ import TableRow from "@mui/material/TableRow";
 import { Input, Row, Col, Space } from "antd";
 import Button from '@mui/material/Button';
 import Moralis from 'moralis';
+import {contractAbi, CONTRACT_ADDRESS} from '../abi';
+import {useHistory} from "react-router-dom"
 
-import { useContext } from "react";
 import  {context} from './ModalProvider'
 
 import "./styles/FintechList.css";
 
-function createData(minter, address) {
-  return { minter, address };
-}
-async function getJson(){
-const response = await fetch('https://wj0omlye4aky.usemoralis.com:2053/server/classes/Metadata', {
-  method: 'GET',
-  headers: {
-      'X-Parse-Application-Id': 'QaWiHgr7Cyn8eLXGWgK5lnC9nO6vBjfULK2Hq2b5'
-      }
-  });
-  const myJson = await response.json(); //extract JSON from the http response
-  // do something with myJson
-  console.log(myJson);
-}
-
-const rows = [
-  createData(1, "0xe123453434534535"),
-  createData(1, "0xe657453453453453"),
-];
 
 const MinterList = () => {
 
-  getJson();
+  const [addresses,setAddresses] = React.useState([])
+  const [minters, setMinters] = React.useState([]);
+  const [referencia,setReferencia] = React.useState("")
+  const [address,setAddress] = React.useState("")
+  const history = useHistory()
+  
+ 
+  async function add(){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+    
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    contract.methods.setMinterRole(address, referencia).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
+      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+        window.location.reload()
+    });
 
-//   const {openModal} = useContext(context)
+  }
+  
+  async function getMinters(){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    await contract.methods.getVecMintersAddress().call({from: currentUser.attributes.ethAddress}).then(function(receipt){
+    console.log(receipt);
+     setAddresses(receipt)
+  }); 
+  }
+
+  async function deleteMinter(address){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+    
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    await contract.methods.removeMinterRole(address).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
+      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+    });
+  }
+ 
+
+  useEffect(()=>{
+    getMinters();
+  },[])
+
+  useEffect(()=>{
+    //Aca recorres el array addresses y piden la data que falta
+    setMinters(addresses.map(a=>({
+      id : Math.random(),
+      address : a
+    })))
+
+  },[addresses])
+
+
+
+const handleReferenciaChange  = (e) => {
+  setReferencia(e.target.value)
+}
+
+
+const handleAddressChange = (e) => {
+  setAddress(e.target.value)
+}
 
   return (
     <>
@@ -58,21 +102,21 @@ const MinterList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {minters.map((row) => (
                 <TableRow
                   component="tr"
-                  key={row.name}
+                  key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell component="tr" align="center">
-                    {row.minter}
+                  <TableCell component="tr" align="center" >
+                    {row.id}
                   </TableCell>
-                  <TableCell component="tr" align="center">
-                    {row.address} <ContentCopyIcon />
+                  <TableCell component="tr" align="center" >
+                    {row.address} <a href='#' onClick={() =>  navigator.clipboard.writeText(row.address)} ><ContentCopyIcon /></a>
                      
                   </TableCell>
                   <TableCell component="tr" align="center">
-                  <Button type="default" shape="round" color="error">
+                  <Button type="default" shape="round" color="error" onClick={(deleteMinter)}>
                          Borrar
                  </Button>
                   </TableCell>
@@ -91,18 +135,18 @@ const MinterList = () => {
             span={6}
             style={{ marginRight: "20px", border: "1px solid gray" }}
           >
-            <Input placeholder="Referencia" />
+            <Input placeholder="Referencia" id='reference' onChange={handleReferenciaChange}/>
           </Row>
 
           <Row
             span={6}
             style={{ marginRight: "20px", border: "1px solid gray" }}
           >
-            <Input placeholder="Address" />
+            <Input placeholder="Address1" id='address1' onChange={handleAddressChange}/>
           </Row>
 
           <Row span={6} style={{ marginRight: "20px" }}>
-            <Button variant="contained" shape="round">
+            <Button variant="contained" shape="round" onClick={(add)}>
               Ingresar Minter
             </Button>
           </Row>
