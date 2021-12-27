@@ -156,6 +156,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      * @dev Dado un address se le otorga el rol de minter
      */
     function setMinterRole(address _minterAddress, string memory _description) public hasAdminRole(msg.sender){
+        require(!hasRole(MINTER_ROLE, _minterAddress), "El Minter ya esta registrado");
         grantRole(MINTER_ROLE,_minterAddress);
         descriptionMinterInAddress[_minterAddress] = _description;
         mintersAddress.push(_minterAddress);
@@ -334,7 +335,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     /**
      * @dev Retorna el array con los addres de los minters
      */
-    function getMintersAddress() public view returns(address[] memory){
+    function getVecMintersAddress() public view returns(address[] memory){
         return mintersAddress;
     }
 
