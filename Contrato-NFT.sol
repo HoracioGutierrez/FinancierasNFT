@@ -23,6 +23,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     mapping (address => string) private descriptionMinterInAddress;
     //Stores id of the fintech added.
     uint [] public fintechId;
+    //Stores the address of the minter added.
+    address [] public mintersAddress;
 
     struct Metadata {
         uint32 autonumericId;
@@ -156,6 +158,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     function setMinterRole(address _minterAddress, string memory _description) public hasAdminRole(msg.sender){
         grantRole(MINTER_ROLE,_minterAddress);
         descriptionMinterInAddress[_minterAddress] = _description;
+        mintersAddress.push(_minterAddress);
     }
 
     /**
@@ -170,6 +173,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         grantRole(FINANCIERA_ROLE, _address);
         fintechId.push(_fintechId);
     }
+
 
     /*************************************************************************************************************************************/
 
@@ -186,6 +190,20 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     function removeMinterRole(address _minterAddress) public hasAdminRole(msg.sender) hasMinterRole(_minterAddress){
         revokeRole(MINTER_ROLE,_minterAddress);
         delete descriptionMinterInAddress[_minterAddress];
+
+        if(mintersAddress.length == 1){
+            mintersAddress.pop();
+            return;
+        }
+
+        for(uint i = 0; i < mintersAddress.length;i++){
+            if (mintersAddress[i] == _minterAddress){
+                address aux = mintersAddress[mintersAddress.length-1];
+                mintersAddress[i] = aux;
+                mintersAddress.pop();
+                break;
+            }
+        }
     }
 
     /**
@@ -214,6 +232,12 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         removeFinancieraRole(fintechIdAddress[_idFinanciera]);
         delete fintechIdAddress[_idFinanciera];
 
+
+        if(fintechId.length == 1){
+            fintechId.pop();
+            return;
+        }
+
         for(uint i = 0; i < fintechId.length;i++){
             if (fintechId[i] == _idFinanciera){
                 uint aux = fintechId[fintechId.length-1];
@@ -241,7 +265,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     //Getters
     /*************************************************************************************************************************************/
 
-
     /**
      * @dev Retorna el array con las ids de las financieras registradas 
      */
@@ -254,22 +277,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      */
     function getNftsInAddress() public view hasFinancieraRole(msg.sender) returns (uint[] memory){
         return nftsIdsInAddress[msg.sender];
-    }
-
-    /**
-     * @dev 
-     */
-    function devolverPagina(uint numeroDePag, uint tamanioDePagina) public view returns (uint[] memory){
-        uint inicioDePagina = numeroDePag * tamanioDePagina;
-        uint [] memory arrayDeRetorno = new uint[] (tamanioDePagina);
-        uint aux = 0;
-
-        for(uint i = inicioDePagina; (i < inicioDePagina + tamanioDePagina) && (i < (nftsIdsInAddress[msg.sender]).length - 1); i++){
-            arrayDeRetorno[aux] = ((nftsIdsInAddress[msg.sender])[i]);
-            aux++;
-        }
-
-        return arrayDeRetorno;
     }
 
     /**
@@ -286,6 +293,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *@dev Implementacion de comparación de metadata ingresada con la metadata de un token especifico
      *El token debe existir
      *Retorna un booleano en base a la comparación de la metadata
+     *True si la metadata es igual, false en caso contrario
      */
      // Hay que ver como hasheamos y editarla
     function compareMeta(bytes32 _hashMetadata, uint _tokenNft) public view returns(bool){
@@ -321,6 +329,13 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
     function getDescriptionMinter(address _minterAddress) public view returns(string memory){
         return descriptionMinterInAddress[_minterAddress];
+    }
+
+    /**
+     * @dev Retorna el array con los addres de los minters
+     */
+    function getMintersAddress() public view returns(address[] memory){
+        return mintersAddress;
     }
 
     /*************************************************************************************************************************************/
