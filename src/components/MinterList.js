@@ -27,8 +27,12 @@ const MinterList = () => {
   const [minters, setMinters] = React.useState([]);
   const [referencia,setReferencia] = React.useState("")
   const [address,setAddress] = React.useState("")
-  const history = useHistory()
   
+  const history = useHistory()
+
+  let administradorRol = false;
+  let minterRol = false;
+  let fintechRol = false;
  
   async function add(){
     const web3 = await Moralis.enableWeb3();
@@ -42,6 +46,52 @@ const MinterList = () => {
 
   }
   
+  async function isInAdminRole(){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    
+    contract.methods.isInAdminRole(currentUser.attributes.ethAddress).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
+      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+      administradorRol = receipt;
+      console.log(administradorRol);
+      // window.location.reload()
+    });
+  }
+  isInAdminRole();
+
+  async function isInMinterRole(){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    
+    contract.methods.isInMinterRole(currentUser.attributes.ethAddress).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
+      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+      minterRol = receipt;
+      console.log(minterRol);
+      // window.location.reload()
+    });
+  }
+  isInMinterRole();
+
+  async function isInFintechRole(){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    
+    contract.methods.isInFinancieraRole(currentUser.attributes.ethAddress).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
+      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+      fintechRol = receipt;
+      console.log(fintechRol);
+      // window.location.reload()
+    });
+  }
+  isInFintechRole();
+
+
   async function getMinters(){
     const web3 = await Moralis.enableWeb3();
     let currentUser = Moralis.User.current();
