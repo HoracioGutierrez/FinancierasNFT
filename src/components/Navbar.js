@@ -10,7 +10,15 @@ import {Redirect} from 'react-router-dom';
 
 const MiNavbar = () => {
 
-    const { authenticate, isAuthenticated, user } = useMoralis();
+    const { authenticate, isAuthenticated, isWeb3Enabled, user } = useMoralis();
+
+    console.group("NavBar")
+
+    console.log("WEB3 Enabled :" , isWeb3Enabled)
+
+    console.groupEnd("NavBar")
+
+    console.groupEnd("Render")
 
     // muestra el address y balance de la wallet
     const balanceYAccount = () => {

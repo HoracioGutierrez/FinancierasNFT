@@ -6,6 +6,7 @@ import Address from "./Address/Address";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "./helpers/Formatters";
 import ContractMethods from "./ContractMethods";
+import {LayoutConNavbar} from '../App'
 
 
 export default function Contract() {
@@ -38,6 +39,7 @@ export default function Contract() {
     }; 
 
   return (
+    <LayoutConNavbar>
     <div style={{ margin: "60px auto auto", display: "flex", gap: "20px", marginTop: "25", width: "70vw" }}>
       <Card
         title={
@@ -121,5 +123,6 @@ export default function Contract() {
         ))}
       </Card>
     </div>
+    </LayoutConNavbar>
   );
 }
