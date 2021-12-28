@@ -211,12 +211,15 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         delete descriptionMinterInAddress[_minterAddress];
 
         if(mintersAddress.length == 1){
+            emit DeleteMinter(_minterAddress);
             mintersAddress.pop();
             return;
         }
 
+
         for(uint i = 0; i < mintersAddress.length;i++){
             if (mintersAddress[i] == _minterAddress){
+                emit DeleteMinter(_minterAddress);
                 address aux = mintersAddress[mintersAddress.length-1];
                 mintersAddress[i] = aux;
                 mintersAddress.pop();
@@ -224,13 +227,12 @@ contract MyNFT is ERC721URIStorage, AccessControl {
             }
         }
 
-        emit DeleteMinter(_minterAddress);
     }
 
     /**
      * @dev Dado un address se le quita el rol de financiera
      */
-    function removeFinancieraRole(address _minterAddress) public hasAdminRole(msg.sender) hasAdminRole(_minterAddress){
+    function removeFinancieraRole(address _minterAddress) public hasAdminRole(msg.sender){
         revokeRole(FINANCIERA_ROLE,_minterAddress);
     }
 
@@ -258,19 +260,20 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
 
         if(fintechId.length == 1){
+            emit DeleteFintech(addressFinanciera);
             fintechId.pop();
             return;
         }
 
         for(uint i = 0; i < fintechId.length;i++){
             if (fintechId[i] == _idFinanciera){
+                emit DeleteFintech(addressFinanciera);
                 uint aux = fintechId[fintechId.length-1];
                 fintechId[i] = aux;
                 fintechId.pop();
                 break;
             }
         }
-        emit DeleteFintech(addressFinanciera);
     }
 
     /**
@@ -310,7 +313,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      *Setea el numero de token de financiera en 1
      */
 
-    function getAddressFinanciera (uint _idFinanciera) public view hasMinterRole(msg.sender) returns(address){
+    function getAddressFinanciera (uint _idFinanciera) public view returns(address){
         return fintechIdAddress[_idFinanciera];
     }
 
