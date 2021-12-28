@@ -12,7 +12,7 @@ import TableNFT from './components/TableNFT';
 import FintechList from './components/FintechList';
 import MinterList from './components/MinterList';
 import {Redirect} from 'react-router-dom';
-import {useEffect} from 'react';
+import { createBrowserHistory } from 'history';
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 </style>
@@ -70,10 +70,11 @@ export const LayoutConNavbar = ({children}) => {
 const App = () => {
   const { web3, authenticate, isAuthenticated, isWeb3Enabled,enableWeb3, user, logout, isAuthenticating, isWeb3EnableLoading } = useMoralis();
 
+  export const history = createBrowserHistory();
 
   if (isWeb3Enabled && !isWeb3EnableLoading) {
     console.log("True")
-    return <Router><Redirect to="/marketplace" /><Switch> <Route exact path="/marketplace" component={Prueba} /></Switch></Router>
+    return <Router history={history}><Redirect to="/marketplace" /><Switch> <Route exact path="/marketplace" component={Prueba} /></Switch></Router>
   }
 
   return (
