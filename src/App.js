@@ -12,7 +12,7 @@ import Start from './components/Start';
 import TableNFT from './components/TableNFT';
 import FintechList from './components/FintechList';
 import MinterList from './components/MinterList';
-import Paginator from './components/Paginator';
+import Test from './components/test';
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 </style>
@@ -49,7 +49,7 @@ const App = () => {
             <Route exact path="/tablenft" component={TableNFT} />
             <Route exact path="/fintechlist" component={FintechList} />
             <Route exact path="/minterlist" component={MinterList} />
-            <Route exact path="/paginator" component={Paginator} />
+            <Route exact path="/test" component={Test} />
           </Switch>
         {/* </div> */}
       </Router>

@@ -19,16 +19,16 @@ import {useHistory} from "react-router-dom";
 import "./styles/FintechList.css";
 
 
-const MinterList = () => {
+const Test = () => {
 
   const [addresses,setAddresses] = React.useState([])
+  const [description, setDescription] = React.useState([])
   const [minters, setMinters] = React.useState([]);
   const [referencia,setReferencia] = React.useState("")
   const [address,setAddress] = React.useState("")
   const [form] = Form.useForm();
   const [, forceUpdate] = React.useState({});
   const history = useHistory()
-  
 
   let administradorRol = false;
   let minterRol = false;
@@ -66,19 +66,16 @@ const MinterList = () => {
   }
 
   async function getDescription(address){
-    //console.log(address + ' direccion dentro de getDescriotion');
+    console.log(address + '  las adresses');
     const web3 = await Moralis.enableWeb3();
     let currentUser = Moralis.User.current();
-    let resultado;
+    
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    return await contract.methods.getDescriptionMinter(address).call().then(function(result){
-      return result
-    })
-    // console.log(resultado + 'hola')
-    // return resultado
-      //console.log('las descripciones  '+ receipt)
+    await contract.methods.getDescriptionMinter(address).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
+      console.log('las descripciones  '+ receipt)
+    
       //setReferencia(receipt);  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-   // }); 
+    });
   }
 
   async function deleteMinter(address){
@@ -93,9 +90,6 @@ const MinterList = () => {
   }
 
 
-//  useEffect(()=>{
-//    getDescription("0x5c6a20eBa299B1D7D09757FD91F1384Fe9c5fA90");
-//  },[])
 
   useEffect(()=>{
     getMinters();
@@ -103,16 +97,14 @@ const MinterList = () => {
 
   useEffect(()=>{
     //Aca recorres el array addresses y piden la data que falta
-    
     setMinters(addresses.map(a=>({
-      id : getDescription(a).toString(),
+      id : 'hola',
       address : a
     })));
 
   },[addresses])
 
 
-console.log("LISTA MINTERS",minters)
 
 const handleReferenciaChange  = (e) => {
   setReferencia(e.target.value)
@@ -134,7 +126,7 @@ const handleAddressChange = (e) => {
           <Table aria-label="simple table" sx={{ minWidth: 650, maxWidth: 650 }}>
             <TableHead>
               <TableRow>
-                <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Descripcion</TableCell>
+                <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Minter</TableCell>
                 <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Address</TableCell>
                 <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Actions</TableCell>
               </TableRow>
@@ -180,11 +172,11 @@ const handleAddressChange = (e) => {
               },
             ]}
           >
-            <Input placeholder="Descripcion" id='reference' onChange={handleReferenciaChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
+            <Input placeholder="Referencia" id='reference' onChange={handleReferenciaChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
           </Form.Item>
           
           <Form.Item
-            name="address"
+            name="password"
             
             rules={[
               {
@@ -193,7 +185,7 @@ const handleAddressChange = (e) => {
               },
             ]}
           >
-            <Input placeholder="Address" id='address1' onChange={handleAddressChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
+            <Input placeholder="Address1" id='address1' onChange={handleAddressChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
           </Form.Item>
           
               <Form.Item shouldUpdate>
@@ -225,50 +217,4 @@ const handleAddressChange = (e) => {
   );
 };
 
-export default MinterList
-
-  // async function isInAdminRole(){
-  //   const web3 = await Moralis.enableWeb3();
-  //   let currentUser = Moralis.User.current();
-
-  //   const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    
-  //   contract.methods.isInAdminRole(currentUser.attributes.ethAddress).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-  //     console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-  //     administradorRol = receipt;
-  //     console.log(administradorRol);
-  //     // window.location.reload()
-  //   });
-  // }
-  // isInAdminRole();
-
-  // async function isInMinterRole(){
-  //   const web3 = await Moralis.enableWeb3();
-  //   let currentUser = Moralis.User.current();
-
-  //   const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    
-  //   contract.methods.isInMinterRole(currentUser.attributes.ethAddress).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-  //     console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-  //     minterRol = receipt;
-  //     console.log(minterRol);
-  //     // window.location.reload()
-  //   });
-  // }
-  // isInMinterRole();
-
-  // async function isInFintechRole(){
-  //   const web3 = await Moralis.enableWeb3();
-  //   let currentUser = Moralis.User.current();
-
-  //   const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    
-  //   contract.methods.isInFinancieraRole(currentUser.attributes.ethAddress).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-  //     console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-  //     fintechRol = receipt;
-  //     console.log(fintechRol);
-  //     // window.location.reload()
-  //   });
-  // }
-  // isInFintechRole();
-
+export default Test
