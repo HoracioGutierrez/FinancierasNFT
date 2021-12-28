@@ -27,7 +27,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     address [] public mintersAddress;
 
     struct Metadata {
-        uint32 autonumericId;
         uint32 loanId;
         uint32 numeroDeCliente;
         uint32 fintechId;
@@ -35,6 +34,23 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         string uriImagen;
         bytes32 hashRegistroBase;
     }
+
+    //Eventos
+    /*************************************************************************************************************************************/
+
+    event NewMinter(string _description, address indexed _minter);
+
+    event DeleteMinter(address indexed _minter);
+
+    event NewFintech(address indexed _address, uint16 _idFintech);
+
+    event DeleteFintech(address indexed _address);
+
+    /*************************************************************************************************************************************/
+
+
+
+
 
     //Constructor
     /*************************************************************************************************************************************/
@@ -160,6 +176,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         grantRole(MINTER_ROLE,_minterAddress);
         descriptionMinterInAddress[_minterAddress] = _description;
         mintersAddress.push(_minterAddress);
+        emit NewMinter(_description, _minterAddress);
     }
 
     /**
@@ -173,6 +190,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         fintechIdAddress[_fintechId] = _address;
         grantRole(FINANCIERA_ROLE, _address);
         fintechId.push(_fintechId);
+        emit NewFintech(_address,_fintechId);
     }
 
 
@@ -205,6 +223,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
                 break;
             }
         }
+
+        emit DeleteMinter(_minterAddress);
     }
 
     /**
@@ -221,6 +241,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     function removeFinanciera(uint _idFinanciera) public hasAdminRole(msg.sender) hasFinancieraRole(fintechIdAddress[_idFinanciera]){
 
         uint [] memory arrayNftsFinanciera = nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
+        address addressFinanciera = getAddressFinanciera(_idFinanciera); 
         // Borro los nfts 
         for (uint i = 0; i < arrayNftsFinanciera.length; i++){
             delete structMetadata[arrayNftsFinanciera[i]];
@@ -232,6 +253,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         delete nftsIdsInAddress[fintechIdAddress[_idFinanciera]];
         removeFinancieraRole(fintechIdAddress[_idFinanciera]);
         delete fintechIdAddress[_idFinanciera];
+
+        
 
 
         if(fintechId.length == 1){
@@ -247,6 +270,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
                 break;
             }
         }
+        emit DeleteFintech(addressFinanciera);
     }
 
     /**
@@ -288,20 +312,6 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
     function getAddressFinanciera (uint _idFinanciera) public view hasMinterRole(msg.sender) returns(address){
         return fintechIdAddress[_idFinanciera];
-    }
-
-    /**
-     *@dev Implementacion de comparación de metadata ingresada con la metadata de un token especifico
-     *El token debe existir
-     *Retorna un booleano en base a la comparación de la metadata
-     *True si la metadata es igual, false en caso contrario
-     */
-     // Hay que ver como hasheamos y editarla
-    function compareMeta(bytes32 _hashMetadata, uint _tokenNft) public view returns(bool){
-        if (_hashMetadata == hashMetadataBase[_tokenNft]) {
-            return true;
-        }
-        return false;
     }
 
     /**
