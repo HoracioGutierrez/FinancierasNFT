@@ -13,6 +13,7 @@ import FintechList from './components/FintechList';
 import MinterList from './components/MinterList';
 import {Redirect} from 'react-router-dom';
 import { createBrowserHistory } from 'history';
+import Test from './components/test';
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 </style>
@@ -72,30 +73,30 @@ const App = () => {
   if (isWeb3Enabled && !isWeb3EnableLoading) {
     console.log("True")
     return <Router ><Redirect to="/marketplace" /><Switch> <Route exact path="/marketplace" component={Prueba} /></Switch>{window.location.reload()}</Router> 
-  }
+  }  
 
   return (
     <>
       <Router>
-        {/* <MiNavbar /> */}
+         {/* <MiNavbar/>  */}
         {/* para logout */}
-        {/* <button onClick={() => logout()} disabled={isAuthenticating}></button> */}
-        <Switch>
-          {/* <RutaConNavbar exact path="/start" component={Start} /> */}
-          {/* <LayoutConNavbar exact path="/start" component={Start} /> */}
-          <Route exact path="/start" component={Start} />
-          <Route exact path="/marketplace" component={Prueba} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/contract" component={Contract} />
-          <Route exact path="/nftbalance" component={NFTBalance} />
-          <Route exact path="/tablenft" component={TableNFT} />
-          <Route exact path="/fintechlist" component={FintechList} />
-          <Route exact path="/minterlist" component={MinterList} />
-        </Switch>
+        {/* <div id="body" style={{backgroundColor: "#f0f2f5;"}}> */}
+          {/* <button onClick={() => logout()} disabled={isAuthenticating}></button> */}
+          <Switch>
+            <Route exact path="/start" component={Start}/>
+            <Route exact path="/marketplace" component={Prueba} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/contract" component={Contract} />
+            <Route exact path="/nftbalance" component={NFTBalance} />
+            <Route exact path="/tablenft" component={TableNFT} />
+            <Route exact path="/fintechlist" component={FintechList} />
+            <Route exact path="/minterlist" component={MinterList} />
+            <Route exact path="/test" component={Test} />
+          </Switch>
+        {/* </div> */}
       </Router>
     </>
   );
 }
-
 
 export default App;

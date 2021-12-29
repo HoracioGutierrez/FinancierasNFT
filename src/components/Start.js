@@ -45,9 +45,7 @@ const Start = () => {
                         <br />
                         contratos
                     </h1>
-                    <button onClick={() => logout()} disabled={isAuthenticating}>
-      Logout
-    </button>
+                    <button onClick={() => logout()} disabled={isAuthenticating}>Logout</button>
 
                     <Button onClick={() => authenticate({ signingMessage: "Action Fintech Authentication" })} id="login-start"><p id="login-text">LOGIN</p></Button>
                 </div>
