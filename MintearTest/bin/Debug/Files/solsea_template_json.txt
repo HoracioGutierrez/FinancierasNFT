@@ -12,11 +12,11 @@
       "value": {{LOAN_NROCLIENT}}
     },
     {
-      "trait_type": "Fecha contrato",
+      "trait_type": "FechaContrato",
       "value": "{{LOAN_DATE}}"
     },
     {
-      "trait_type": "Fintechid",
+      "trait_type": "FintechId",
       "value": {{LOAN_FINTECHID}}
     }
   ]
