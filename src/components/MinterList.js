@@ -28,11 +28,39 @@ const MinterList = () => {
   const [form] = Form.useForm();
   const [, forceUpdate] = React.useState({});
   const history = useHistory()
-  
 
   let administradorRol = false;
   let minterRol = false;
   let fintechRol = false;
+  
+
+  // a list for saving subscribed event instances
+  const subscribedEvents = {}
+  // Subscriber method
+  const subscribeLogEvent = (contract, eventName) => {
+    const web3 = Moralis.enableWeb3();
+    const eventJsonInterface = web3.utils._.find(
+      contract._jsonInterface,
+      o => o.name === eventName && o.type === 'event',
+    )
+    const subscription = web3.eth.subscribe('logs', {
+      address: contract.options.address,
+      topics: [eventJsonInterface.signature]
+    }, (error, result) => {
+      if (!error) {
+        const eventObj = web3.eth.abi.decodeLog(
+          eventJsonInterface.inputs,
+          result.data,
+          result.topics.slice(1)
+        )
+        console.log(`New ${eventName}!`, eventObj)
+      }
+    })
+    subscribedEvents[eventName] = subscription
+    console.log(`subscribed to event '${eventName}' of contract '${contract.options.address}' `)
+  }
+
+
 
   useEffect(() => {
     forceUpdate({});
@@ -49,36 +77,19 @@ const MinterList = () => {
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
     contract.methods.setMinterRole(address, referencia).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
       console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-        window.location.reload()
+      window.location.reload()
+      subscribeLogEvent(contract, "eventMinter")
     });
 
   }
   
-
   async function getMinters(){
     const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    await contract.methods.getVecMintersAddress().call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-    console.log(receipt);
-     setAddresses(receipt)
-  }); 
-  }
-
-  async function getDescription(address){
-    //console.log(address + ' direccion dentro de getDescriotion');
-    const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
-    let resultado;
-    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    return await contract.methods.getDescriptionMinter(address).call().then(function(result){
-      return result
-    })
-    // console.log(resultado + 'hola')
-    // return resultado
-      //console.log('las descripciones  '+ receipt)
-      //setReferencia(receipt);  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-   // }); 
+    await contract.methods.getVecMintersAddress().call().then(function(receipt){
+    console.log(receipt[0]);
+    setAddresses(receipt)
+    }); 
   }
 
   async function deleteMinter(address){
@@ -89,6 +100,8 @@ const MinterList = () => {
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
     await contract.methods.removeMinterRole(address).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
       console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+        window.location.reload()
+        subscribeLogEvent(contract, "eventMinter")
     });
   }
 
@@ -105,8 +118,8 @@ const MinterList = () => {
     //Aca recorres el array addresses y piden la data que falta
     
     setMinters(addresses.map(a=>({
-      id : getDescription(a).toString(),
-      address : a
+      id : a[1], //.toString(),
+      address : a[0]
     })));
 
   },[addresses])

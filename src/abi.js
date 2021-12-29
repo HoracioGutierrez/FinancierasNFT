@@ -1,5 +1,39 @@
 export const contractAbi = [
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_fintechId",
+				"type": "uint16"
+			}
+		],
+		"name": "agregarFinanciera",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_symbol",
+				"type": "string"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -48,6 +82,147 @@ export const contractAbi = [
 		],
 		"name": "ApprovalForAll",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "grantRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_recipient",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_tokenURI",
+				"type": "string"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint32",
+						"name": "loanId",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "numeroDeCliente",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "fintechId",
+						"type": "uint32"
+					},
+					{
+						"internalType": "string",
+						"name": "fechaDeCreacion",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "uriImagen",
+						"type": "string"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "hashRegistroBase",
+						"type": "bytes32"
+					}
+				],
+				"internalType": "struct MyNFT.Metadata",
+				"name": "_metadata",
+				"type": "tuple"
+			}
+		],
+		"name": "mintNFT",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_idNft",
+				"type": "uint256"
+			}
+		],
+		"name": "quemarNft",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_idFinanciera",
+				"type": "uint256"
+			}
+		],
+		"name": "removeFinanciera",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "renounceRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -150,150 +325,48 @@ export const contractAbi = [
 		"type": "event"
 	},
 	{
+		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": true,
 				"internalType": "address",
 				"name": "_address",
 				"type": "address"
 			},
 			{
-				"internalType": "uint16",
-				"name": "_fintechId",
-				"type": "uint16"
-			}
-		],
-		"name": "agregarFinanciera",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "grantRole",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_recipient",
-				"type": "address"
-			},
-			{
+				"indexed": false,
 				"internalType": "string",
-				"name": "_tokenURI",
+				"name": "_operation",
+				"type": "string"
+			}
+		],
+		"name": "eventFintech",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_minterAdress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_description",
 				"type": "string"
 			},
 			{
-				"components": [
-					{
-						"internalType": "uint32",
-						"name": "autonumericId",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "loanId",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "numeroDeCliente",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "fintechId",
-						"type": "uint32"
-					},
-					{
-						"internalType": "string",
-						"name": "fechaDeCreacion",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "uriImagen",
-						"type": "string"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "hashRegistroBase",
-						"type": "bytes32"
-					}
-				],
-				"internalType": "struct MyNFT.Metadata",
-				"name": "_metadata",
-				"type": "tuple"
+				"indexed": false,
+				"internalType": "string",
+				"name": "_operation",
+				"type": "string"
 			}
 		],
-		"name": "mintNFT",
-		"outputs": [
-			{
-				"internalType": "bytes32",
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_idNft",
-				"type": "uint256"
-			}
-		],
-		"name": "quemarNft",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_idFinanciera",
-				"type": "uint256"
-			}
-		],
-		"name": "removeFinanciera",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "eventMinter",
+		"type": "event"
 	},
 	{
 		"inputs": [
@@ -317,24 +390,6 @@ export const contractAbi = [
 			}
 		],
 		"name": "removeMinterRole",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "role",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			}
-		],
-		"name": "renounceRole",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -488,22 +543,6 @@ export const contractAbi = [
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_symbol",
-				"type": "string"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "owner",
 				"type": "address"
@@ -515,30 +554,6 @@ export const contractAbi = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "_hashMetadata",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tokenNft",
-				"type": "uint256"
-			}
-		],
-		"name": "compareMeta",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",
@@ -643,25 +658,6 @@ export const contractAbi = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_minterAddress",
-				"type": "address"
-			}
-		],
-		"name": "getDescriptionMinter",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "_tokenNft",
 				"type": "uint256"
@@ -734,9 +730,21 @@ export const contractAbi = [
 		"name": "getVecMintersAddress",
 		"outputs": [
 			{
-				"internalType": "address[]",
+				"components": [
+					{
+						"internalType": "address",
+						"name": "minterAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"internalType": "struct MyNFT.Minter[]",
 				"name": "",
-				"type": "address[]"
+				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
@@ -793,50 +801,17 @@ export const contractAbi = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "isInAdminRole",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
 			{
 				"internalType": "address",
 				"name": "_address",
 				"type": "address"
 			}
 		],
-		"name": "isInFinancieraRole",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "isInMinterRole",
+		"name": "isInRole",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -872,8 +847,13 @@ export const contractAbi = [
 		"outputs": [
 			{
 				"internalType": "address",
-				"name": "",
+				"name": "minterAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -921,11 +901,6 @@ export const contractAbi = [
 		],
 		"name": "structMetadata",
 		"outputs": [
-			{
-				"internalType": "uint32",
-				"name": "autonumericId",
-				"type": "uint32"
-			},
 			{
 				"internalType": "uint32",
 				"name": "loanId",
@@ -1011,7 +986,7 @@ export const contractAbi = [
 		"stateMutability": "view",
 		"type": "function"
 	}
-];
+]
 
-export const CONTRACT_ADDRESS="0xaC23DEa4e6c557C18Ce92eDA0797Ea140485d2D2";
+export const CONTRACT_ADDRESS="0x60d150Aa181B3B801510a7589F8d58427884f7e5";
 
