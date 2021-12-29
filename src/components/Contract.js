@@ -6,10 +6,7 @@ import Address from "./Address/Address";
 import { useMoralis, useMoralisQuery } from "react-moralis";
 import { getEllipsisTxt } from "./helpers/Formatters";
 import ContractMethods from "./ContractMethods";
-<<<<<<< HEAD
 import {LayoutConNavbar} from '../App'
-=======
->>>>>>> react-front-dev
 
 
 export default function Contract() {
