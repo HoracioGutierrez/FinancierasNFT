@@ -19,12 +19,10 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     mapping (uint => address) private fintechIdAddress;
     //Mapping from fintech address to array storing all NFT IDs minted to that account.
     mapping (address => uint[]) private nftsIdsInAddress;
-    //Stores a descriptions of the minter address
-    mapping (address => string) private descriptionMinterInAddress;
     //Stores id of the fintech added.
     uint [] public fintechId;
     //Stores the address of the minter added.
-    address [] public mintersAddress;
+    Minter [] public mintersAddress;
 
     struct Metadata {
         uint32 loanId;
@@ -35,16 +33,22 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         bytes32 hashRegistroBase;
     }
 
+    struct Minter {
+        address minterAddress;
+        string description;
+    }
+
     //Eventos
     /*************************************************************************************************************************************/
 
-    event NewMinter(string _description, address indexed _minter);
+    //Push/Agrego
+    //Pop/Quito
+    event eventMinter(address indexed _minterAdress, string _description, string _operation);
 
-    event DeleteMinter(address indexed _minter);
+    //Push/Agrego
+    //Pop/Quito
+    event eventFintech(address indexed _address, string _operation);
 
-    event NewFintech(address indexed _address, uint16 _idFintech);
-
-    event DeleteFintech(address indexed _address);
 
     /*************************************************************************************************************************************/
 
@@ -123,40 +127,18 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
-     * @dev Chequea que el address enviado por parametro sea Admin.
-     * En el caso que el address sea admin, retornará true
+     * @dev Chequea que el address enviado por parametro pertenezca al rol enviado.
+     * En el caso que el address pretenezca al rol, retornará true
      * Caso contraro contrario retornará false
      */
-    function isInAdminRole(address _address) public view returns (bool){
-        if (hasRole(DEFAULT_ADMIN_ROLE, _address)){
+    function isInRole(string memory _role, address _address) public view returns (bool){
+        bytes32 role = keccak256(abi.encodePacked(_role));
+        if (hasRole(role, _address)){
             return true;
         }
         return false;
     }
 
-    /**
-     * @dev Chequea que el address enviado por parametro sea Minter.
-     * En el caso que el address sea admin, retornará true
-     * Caso contraro contrario retornará false
-     */
-    function isInMinterRole(address _address) public view returns (bool){
-        if (hasRole(MINTER_ROLE, _address)){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @dev Chequea que el address enviado por parametro sea Financiera.
-     * En el caso que el address sea admin, retornará true
-     * Caso contraro contrario retornará false
-     */
-    function isInFinancieraRole(address _address) public view returns (bool){
-        if (hasRole(FINANCIERA_ROLE, _address)){
-            return true;
-        }
-        return false;
-    }
 
     /*************************************************************************************************************************************/
 
@@ -174,9 +156,12 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     function setMinterRole(address _minterAddress, string memory _description) public hasAdminRole(msg.sender){
         require(!hasRole(MINTER_ROLE, _minterAddress), "El Minter ya esta registrado");
         grantRole(MINTER_ROLE,_minterAddress);
-        descriptionMinterInAddress[_minterAddress] = _description;
-        mintersAddress.push(_minterAddress);
-        emit NewMinter(_description, _minterAddress);
+
+        Minter memory auxMinter;
+        auxMinter.minterAddress = _minterAddress;
+        auxMinter.description = _description;
+        mintersAddress.push(auxMinter);
+        emit eventMinter(_minterAddress, _description, "Push new Minter");
     }
 
     /**
@@ -190,7 +175,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
         fintechIdAddress[_fintechId] = _address;
         grantRole(FINANCIERA_ROLE, _address);
         fintechId.push(_fintechId);
-        emit NewFintech(_address,_fintechId);
+        emit eventFintech(_address,"Push new Fintech");
     }
 
 
@@ -208,20 +193,19 @@ contract MyNFT is ERC721URIStorage, AccessControl {
      */
     function removeMinterRole(address _minterAddress) public hasAdminRole(msg.sender) hasMinterRole(_minterAddress){
         revokeRole(MINTER_ROLE,_minterAddress);
-        delete descriptionMinterInAddress[_minterAddress];
 
         if(mintersAddress.length == 1){
-            emit DeleteMinter(_minterAddress);
+            emit eventMinter(mintersAddress[0].minterAddress, mintersAddress[0].description, "Pop Minter");
             mintersAddress.pop();
             return;
         }
 
 
         for(uint i = 0; i < mintersAddress.length;i++){
-            if (mintersAddress[i] == _minterAddress){
-                emit DeleteMinter(_minterAddress);
-                address aux = mintersAddress[mintersAddress.length-1];
-                mintersAddress[i] = aux;
+            if (mintersAddress[i].minterAddress == _minterAddress){
+                emit eventMinter(mintersAddress[i].minterAddress, mintersAddress[i].description, "Pop Minter");
+                Minter memory auxMinter = mintersAddress[mintersAddress.length-1];
+                mintersAddress[i] = auxMinter;
                 mintersAddress.pop();
                 break;
             }
@@ -260,14 +244,14 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
 
         if(fintechId.length == 1){
-            emit DeleteFintech(addressFinanciera);
+            emit eventFintech(addressFinanciera, "Pop Fintech");
             fintechId.pop();
             return;
         }
 
         for(uint i = 0; i < fintechId.length;i++){
             if (fintechId[i] == _idFinanciera){
-                emit DeleteFintech(addressFinanciera);
+                emit eventFintech(addressFinanciera, "Pop Fintech");
                 uint aux = fintechId[fintechId.length-1];
                 fintechId[i] = aux;
                 fintechId.pop();
@@ -338,17 +322,9 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     }
 
     /**
-     *@dev Retorna la descripción asociada al minter
-     */
-
-    function getDescriptionMinter(address _minterAddress) public view returns(string memory){
-        return descriptionMinterInAddress[_minterAddress];
-    }
-
-    /**
      * @dev Retorna el array con los addres de los minters
      */
-    function getVecMintersAddress() public view returns(address[] memory){
+    function getVecMintersAddress() public view returns(Minter[] memory){
         return mintersAddress;
     }
 
