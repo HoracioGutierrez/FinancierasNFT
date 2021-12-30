@@ -1,3 +1,5 @@
+import React, {useState, useEffect} from 'react';
+import { Redirect } from 'react-router-dom';
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
@@ -13,37 +15,97 @@ import "./styles/FintechList.css";
 import Moralis from 'moralis';
 import {contractAbi, CONTRACT_ADDRESS} from '../abi';
 
-let web3;
-
-
-
-function createData( fintechId, address, nft, actions) {
-  return {  fintechId, address, nft, actions };
+async function event(){
+  const web3 = await Moralis.enableWeb3();
+  const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+  contract.events.eventFintech(function(error, event){ console.log(event); })
+  .on('data', function(event){
+      console.log(event); // same results as the optional callback above
+      window.location.reload()
+  })
+  .on('changed', function(event){
+      // remove event from local database
+  })
+  .on('error', console.error);
 }
-
-const rows = [
-  createData( 22, "0xe12354565745125456545245", 24),
-  createData( 22, "0xe65745125456541235455245", 24),
-];
 
 const FintechList = () => {
 
+  const [id,setId] = React.useState("")
+  const [address,setAddress] = React.useState("")
+  const [addresses,setAddresses] = React.useState([])
+  const [financieras, setFinancieras] = React.useState([]);
+
+  event()
+
   async function add(){
+    const web3 = await Moralis.enableWeb3();
     let currentUser = Moralis.User.current(); 
-    
-    web3 = await Moralis.enableWeb3();
-
-
-    let address = document.getElementById("address").value
-    console.log(address)
-    let id = parseInt(document.getElementById("id").value)
-    console.log(id)
 
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    contract.methods.agregarFinanciera(address, id).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
-        console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+    await contract.methods.agregarFinanciera(address, id).send({from: currentUser.attributes.ethAddress})
+  }
+
+  async function deleteFintech(idFinanciera){
+    const web3 = await Moralis.enableWeb3();
+    let currentUser = Moralis.User.current();
+    
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    await contract.methods.removeFinanciera(idFinanciera).send({from: currentUser.attributes.ethAddress})
+  }
+      
+  async function getFinancieras(){
+    //let addr = []
+    const web3 = await Moralis.enableWeb3();
+    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+    const ids = await contract.methods.getArrayIdsFintech().call()
+    const addresses = await Promise.all(ids.map(async id => {
+      return await contract.methods.getAddressFinanciera(id).call()
+    }))
+    const nfts = await Promise.all(addresses.map(async address => {
+      return await contract.methods.getNftsInAddress(address).call()
+    }))
+    console.log(nfts)
+
+    var c = ids.map(function(e, i) {
+      return [e, addresses[i], nfts[i].length];
     });
+    console.log(c)
+    setAddresses(c)
+  }
+
+  useEffect(()=>{
+    getFinancieras();
+  },[])
+
+  useEffect(()=>{
+    //Aca recorres el array addresses y piden la data que falta
+    
+    setFinancieras(addresses.map(a=>({
+      id : a[0], //.toString(),
+      address : a[1],
+      nft: a[2],
+    })));
+
+  },[addresses])
+
+const handleIdChange  = (e) => {
+  setId(e.target.value)
 }
+
+
+const handleAddressChange = (e) => {
+  setAddress(e.target.value)
+}
+
+const showNFTDetails = (nfts) => {
+  //setNftToSend(nft);
+  //setVisibility(true);
+  console.log(nfts)
+  
+  // setNFT(nft)
+  // push(`/nft/${nft.token_id}`);
+};
 
   return (
     <>
@@ -86,14 +148,14 @@ const FintechList = () => {
               </TableRow>
             </TableHead>
             <TableBody id="tableBody">
-              {rows.map((row) => (
+              {financieras.map((row) => (
                 <TableRow
                   key={row.nombre}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   
                   <TableCell align="center" component="tr">
-                    {row.fintechId}
+                    {row.id}
                   </TableCell>
                   <TableCell align="center" component="tr">
                     {row.address}
@@ -106,10 +168,11 @@ const FintechList = () => {
                       shape="round"
                       type="primary"
                       style={{ marginRight: "20px" }}
+                      onClick={() => showNFTDetails(row.nft)}
                     >
                       Ver NFT
                     </Button>
-                    <Button color="error">Borrar Fintech</Button>
+                    <Button color="error" onClick={() => deleteFintech(parseInt(row.id))}>Borrar Fintech</Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -126,14 +189,14 @@ const FintechList = () => {
             span={6}
             style={{ marginRight: "20px", border: "1px solid gray" }}
           >
-            <Input id="address" placeholder="Address" />
+            <Input id="address" placeholder="Address" onChange={handleAddressChange}/>
           </Row>
 
           <Row
             span={6}
             style={{ marginRight: "20px", border: "1px solid gray" }}
           >
-            <Input id='id' placeholder="Fintech ID" />
+            <Input id='id' placeholder="Fintech ID" onChange={handleIdChange}/>
           </Row>
 
           <Row span={6} style={{ marginRight: "20px" }}>
@@ -148,3 +211,21 @@ const FintechList = () => {
 };
 
 export default FintechList;
+
+
+
+/**
+ * 
+ *  async / await 
+ * 
+ *  
+ * async function foo(){
+ * 
+ *  //promse.then((res)=>{})
+ *  //const rest = await promise
+ * }
+ * 
+ * const resultado = foo()
+ * 
+ * 
+ */

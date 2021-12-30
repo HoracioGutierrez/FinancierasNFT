@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useContext , useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
 import  ContentCopyIcon  from "@mui/icons-material/ContentCopy";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,13 +9,29 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Grid from '@mui/material/Grid';
-import {Form, Input, Row, Col, Space } from "antd";
+import {Form, Input } from "antd";
 import Button from '@mui/material/Button';
 import Moralis from 'moralis';
 import {contractAbi, CONTRACT_ADDRESS} from '../abi';
 import {useHistory} from "react-router-dom";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import "./styles/FintechList.css";
+
+
+async function event(){
+  const web3 = await Moralis.enableWeb3();
+  const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
+  contract.events.eventMinter(function(error, event){ console.log(event); })
+  .on('data', function(event){
+      console.log(event); // same results as the optional callback above
+      window.location.reload()
+  })
+  .on('changed', function(event){
+      // remove event from local database
+  })
+  .on('error', console.error);
+}
 
 
 const MinterList = () => {
@@ -28,11 +43,37 @@ const MinterList = () => {
   const [form] = Form.useForm();
   const [, forceUpdate] = React.useState({});
   const history = useHistory()
-  
+  let [loading, setLoading] = React.useState(false);
 
-  let administradorRol = false;
-  let minterRol = false;
-  let fintechRol = false;
+  event()
+
+  // a list for saving subscribed event instances
+  //const subscribedEvents = {}
+  // Subscriber method
+  // const subscribeLogEvent = (contract, eventName) => {
+  //   const eventJsonInterface = web3.utils._.find(
+  //     contract._jsonInterface,
+  //     o => o.name === eventName && o.type === 'event',
+  //   )
+  //   const subscription = web3.eth.subscribe('logs', {
+  //     address: contract.options.address,
+  //     topics: [eventJsonInterface.signature]
+  //   }, (error, result) => {
+  //     if (!error) {
+  //       const eventObj = web3.eth.abi.decodeLog(
+  //         eventJsonInterface.inputs,
+  //         result.data,
+  //         result.topics.slice(1)
+  //       )
+  //       console.log(`New ${eventName}!`, eventObj)
+  //     }
+  //   })
+  //   subscribedEvents[eventName] = subscription
+  //   console.log(`subscribed to event '${eventName}' of contract '${contract.options.address}' `)
+  // }
+
+  // subscribeLogEvent(contract, "eventMinter")
+
 
   useEffect(() => {
     forceUpdate({});
@@ -45,50 +86,34 @@ const MinterList = () => {
   async function add(){
     const web3 = await Moralis.enableWeb3();
     let currentUser = Moralis.User.current();
-    
+    setLoading(true)
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
     contract.methods.setMinterRole(address, referencia).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
-      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-        window.location.reload()
+      //console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+      setLoading(false)
+      //subscribeLogEvent(contract, "eventMinter", web3)
     });
-
+    
   }
   
 
+  
   async function getMinters(){
     const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    await contract.methods.getVecMintersAddress().call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-    console.log(receipt);
-     setAddresses(receipt)
-  }); 
-  }
-
-  async function getDescription(address){
-    //console.log(address + ' direccion dentro de getDescriotion');
-    const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
-    let resultado;
-    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    return await contract.methods.getDescriptionMinter(address).call().then(function(result){
-      return result
-    })
-    // console.log(resultado + 'hola')
-    // return resultado
-      //console.log('las descripciones  '+ receipt)
-      //setReferencia(receipt);  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-   // }); 
+    await contract.methods.getVecMintersAddress().call().then(function(receipt){
+    setAddresses(receipt)
+    }); 
   }
 
   async function deleteMinter(address){
     console.log(address);
     const web3 = await Moralis.enableWeb3();
     let currentUser = Moralis.User.current();
-    
+    setLoading(true)
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
     await contract.methods.removeMinterRole(address).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
-      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
+      //console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
     });
   }
 
@@ -105,14 +130,12 @@ const MinterList = () => {
     //Aca recorres el array addresses y piden la data que falta
     
     setMinters(addresses.map(a=>({
-      id : getDescription(a).toString(),
-      address : a
+      id : a[1], //.toString(),
+      address : a[0]
     })));
 
   },[addresses])
 
-
-console.log("LISTA MINTERS",minters)
 
 const handleReferenciaChange  = (e) => {
   setReferencia(e.target.value)
@@ -127,7 +150,7 @@ const handleAddressChange = (e) => {
 
   return (
     <>
-      <Stack spacing={2} justifyContent="left">
+      {!loading ? (<Stack spacing={2} justifyContent="left">
         <h1 className="title">Administrador </h1>
         <h2 className="subtitle">Lista de Minters</h2>
         <TableContainer component={Paper}>
@@ -178,6 +201,7 @@ const handleAddressChange = (e) => {
                 required: true,
                 message: 'Por favor agrega una descripcion',
               },
+              { min: 5, message: 'La descripcion debe tener un minimo de 5 caracteres' },
             ]}
           >
             <Input placeholder="Descripcion" id='reference' onChange={handleReferenciaChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
@@ -189,7 +213,8 @@ const handleAddressChange = (e) => {
             rules={[
               {
                 required: true,
-                message: 'Por favor agrega una contraseña',
+                pattern: new RegExp(/^0x[a-fA-F0-9]{40}$/),
+                message: 'Por favor agrega un Address valido',
               },
             ]}
           >
@@ -217,7 +242,12 @@ const handleAddressChange = (e) => {
         </Form>
               
 
-      </Stack>
+      </Stack>) : (<Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>)}
       
 
 

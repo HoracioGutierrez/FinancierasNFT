@@ -1,218 +1,138 @@
-import * as React from 'react';
-import { useContext , useEffect } from "react";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
-import  ContentCopyIcon  from "@mui/icons-material/ContentCopy";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Grid from '@mui/material/Grid';
-import {Form, Input, Row, Col, Space } from "antd";
-import Button from '@mui/material/Button';
-import Moralis from 'moralis';
-import {contractAbi, CONTRACT_ADDRESS} from '../abi';
-import {useHistory} from "react-router-dom";
-import "./styles/FintechList.css";
+import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Form, Input, Button, Radio } from 'antd';
+import './styles/test.css';
 
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+  createData('Eclair', 262, 16.0, 24, 6.0),
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
 
 const Test = () => {
 
-  const [addresses,setAddresses] = React.useState([])
-  const [description, setDescription] = React.useState([])
-  const [minters, setMinters] = React.useState([]);
-  const [referencia,setReferencia] = React.useState("")
-  const [address,setAddress] = React.useState("")
   const [form] = Form.useForm();
-  const [, forceUpdate] = React.useState({});
-  const history = useHistory()
+  const [formLayout, setFormLayout] = useState('inline');
 
-  let administradorRol = false;
-  let minterRol = false;
-  let fintechRol = false;
-
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
-
-  const onFinish = (values) => {
-    console.log('Finish:', values);
+  const onFormLayoutChange = ({ layout }) => {
+    setFormLayout(layout);
   };
- 
-  async function add(){
-    const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
-    
-    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    contract.methods.setMinterRole(address, referencia).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
-      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-        window.location.reload()
-    });
 
-  }
-  
-
-  async function getMinters(){
-    const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
-    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    await contract.methods.getVecMintersAddress().call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-    console.log(receipt);
-     setAddresses(receipt)
-  }); 
-  }
-
-  async function getDescription(address){
-    console.log(address + '  las adresses');
-    const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
-    
-    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    await contract.methods.getDescriptionMinter(address).call({from: currentUser.attributes.ethAddress}).then(function(receipt){
-      console.log('las descripciones  '+ receipt)
-    
-      //setReferencia(receipt);  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-    });
-  }
-
-  async function deleteMinter(address){
-    console.log(address);
-    const web3 = await Moralis.enableWeb3();
-    let currentUser = Moralis.User.current();
-    
-    const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-    await contract.methods.removeMinterRole(address).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
-      console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-    });
-  }
-
-
-
-  useEffect(()=>{
-    getMinters();
-  },[])
-
-  useEffect(()=>{
-    //Aca recorres el array addresses y piden la data que falta
-    setMinters(addresses.map(a=>({
-      id : 'hola',
-      address : a
-    })));
-
-  },[addresses])
-
-
-
-const handleReferenciaChange  = (e) => {
-  setReferencia(e.target.value)
-}
-
-
-const handleAddressChange = (e) => {
-  setAddress(e.target.value)
-}
-
+  const formItemLayout =
+    formLayout === 'horizontal'
+      ? {
+          labelCol: {
+            span: 4,
+          },
+          wrapperCol: {
+            span: 14,
+          },
+        }
+      : null;
+  const buttonItemLayout =
+    formLayout === 'horizontal'
+      ? {
+          wrapperCol: {
+            span: 14,
+            offset: 4,
+          },
+        }
+      : null;
 
 
   return (
     <>
-      <Stack spacing={2} justifyContent="left">
-        <h1 className="title">Administrador </h1>
-        <h2 className="subtitle">Lista de Minters</h2>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table" sx={{ minWidth: 650, maxWidth: 650 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Minter</TableCell>
-                <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Address</TableCell>
-                <TableCell align="center" style={{ border: "1px solid gray", fontWeight: "700" }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {minters.map((row) => (
-                <TableRow
-                  component="tr"
-                  key={row.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="tr" align="center" >
-                    {row.id}
-                  </TableCell>
-                  <TableCell component="tr" align="center" >
-                    {row.address} <a href='#' onClick={() =>  navigator.clipboard.writeText(row.address)} ><ContentCopyIcon /></a>
-                     
-                  </TableCell>
-                  <TableCell component="tr" align="center">
-                  <Button type="default" shape="round" color="error" onClick={() => deleteMinter(row.address)}>
-                         Borrar
-                 </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <br/>
-        <h3 className="subtitle">Gestión de Minters</h3>
-        <h4 className="infoSubtitle">Minters</h4>
-
-
-        
-        <Form form={form} name="horizontal_login" layout="horizontal" onFinish={onFinish} >
-        
-          <Form.Item
-            name="description"
-            rules={[
-              {
-                required: true,
-                message: 'Por favor agrega una descripcion',
-              },
-            ]}
-          >
-            <Input placeholder="Referencia" id='reference' onChange={handleReferenciaChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
-          </Form.Item>
-          
-          <Form.Item
-            name="password"
-            
-            rules={[
-              {
-                required: true,
-                message: 'Por favor agrega una contraseña',
-              },
-            ]}
-          >
-            <Input placeholder="Address1" id='address1' onChange={handleAddressChange} style={{width:"300px", border: "1px solid black", margin: "10px"}}/>
-          </Form.Item>
-          
-              <Form.Item shouldUpdate>
-            {() => (
-              <Button 
-                type="primary"
-                htmlType="submit"
-                // 
-                onClick={(add)}
-                disabled={
-                  
-                  !form.isFieldsTouched(true) ||
-                  !!form.getFieldsError().filter(({ errors }) => errors.length).length
-                }
-              >
-                Ingresar Minter
-              </Button>
-            )}
-          </Form.Item>
-          
-        </Form>
-              
-
-      </Stack>
-      
-
-
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead className="headTest">
+          <TableRow>
+            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
+            <StyledTableCell align="right">Calories</StyledTableCell>
+            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
+            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
+            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <StyledTableRow key={row.name}>
+              <StyledTableCell component="" scope="row">
+                {row.name}
+              </StyledTableCell>
+              <StyledTableCell align="right">{row.calories}</StyledTableCell>
+              <StyledTableCell align="right">{row.fat}</StyledTableCell>
+              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    <div>
+    <Form
+      {...formItemLayout}
+      layout={formLayout}
+      form={form}
+      initialValues={{
+        layout: formLayout,
+      }}
+      onValuesChange={onFormLayoutChange}
+    >
+      <Form.Item label="Form Layout" name="layout">
+        <Radio.Group value={formLayout}>
+          <Radio.Button value="horizontal">Horizontal</Radio.Button>
+          <Radio.Button value="vertical">Vertical</Radio.Button>
+          <Radio.Button value="inline">Inline</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
+      <Form.Item label="Field A">
+        <Input placeholder="input placeholder" />
+      </Form.Item>
+      <Form.Item label="Field B">
+        <Input placeholder="input placeholder" />
+      </Form.Item>
+      <Form.Item {...buttonItemLayout}>
+        <Button type="primary">Submit</Button>
+      </Form.Item>
+    </Form>
+    </div>
+  
     </>
   );
 };
