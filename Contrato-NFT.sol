@@ -287,8 +287,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     /**
      * @dev Dado un address retorna la cantidad de nfts 
      */
-    function getNftsInAddress() public view hasFinancieraRole(msg.sender) returns (uint[] memory){
-        return nftsIdsInAddress[msg.sender];
+    function getNftsInAddress(address _address) public view hasFinancieraRole(_address) returns (uint[] memory){
+        return nftsIdsInAddress[_address];
     }
 
     /**
