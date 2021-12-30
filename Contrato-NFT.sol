@@ -49,6 +49,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     //Pop/Quito
     event eventFintech(address indexed _address, string _operation);
 
+    event eventNft(address indexed _address, string _operation);
+
 
     /*************************************************************************************************************************************/
 
@@ -356,6 +358,7 @@ contract MyNFT is ERC721URIStorage, AccessControl {
                 uint aux = arrayNftsFinanciera[arrayNftsFinanciera.length-1];
                 arrayNftsFinanciera[i] = aux;
                 nftsIdsInAddress[msg.sender].pop();      //Chequear si al transferir funciona
+                emit eventNft(_to, "Transfer Nft");
                 break;
             }
         }
@@ -389,6 +392,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
                                                                                                     hasFinancieraRole(_recipient) 
      returns (bytes32){
         
+
+
         tokenId += 1;
         structMetadata[tokenId] = _metadata;
         nftsIdsInAddress[_recipient].push(tokenId);
@@ -397,6 +402,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
 
         _mint(_recipient, tokenId);
         _setTokenURI(tokenId, _tokenURI);
+
+        emit eventNft(_recipient, "Mint Nft");
 
         return   hashMetadataBase[tokenId];
     }
