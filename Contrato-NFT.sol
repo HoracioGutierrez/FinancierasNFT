@@ -49,6 +49,8 @@ contract MyNFT is ERC721URIStorage, AccessControl {
     //Pop/Quito
     event eventFintech(address indexed _address, string _operation);
 
+    //creacion
+    //transferencia
     event eventNft(address indexed _address, string _operation);
 
 
