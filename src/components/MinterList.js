@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useContext , useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
 import  ContentCopyIcon  from "@mui/icons-material/ContentCopy";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,8 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Grid from '@mui/material/Grid';
-import {Form, Input, Row, Col, Space } from "antd";
+import {Form, Input } from "antd";
 import Button from '@mui/material/Button';
 import Moralis from 'moralis';
 import {contractAbi, CONTRACT_ADDRESS} from '../abi';
@@ -93,7 +91,6 @@ const MinterList = () => {
     contract.methods.setMinterRole(address, referencia).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
       //console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
       setLoading(false)
-      window.location.reload()
       //subscribeLogEvent(contract, "eventMinter", web3)
     });
     
@@ -117,7 +114,6 @@ const MinterList = () => {
     const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
     await contract.methods.removeMinterRole(address).send({from: currentUser.attributes.ethAddress}).then(function(receipt){
       //console.log(receipt)  // cuando se confirma la transaccion devuelve un json con el numero de trasacc, nro de bloque, gas, etc.
-      window.location.reload()
     });
   }
 
