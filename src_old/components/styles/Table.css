@@ -1,0 +1,26 @@
+th{
+    color: white;
+}
+
+.tableTitle{
+    font-size: 25px;
+    color: rgb(87, 87, 87);
+    font-weight: bold;
+}
+
+.tableSubtitle{
+    font-size: 12px;
+    color: rgb(172, 172, 172);
+}
+
+.buttonNFT{
+    color: white;
+    background-color: #663DBD;
+    border-radius: 5px;
+    border: 0px;
+    font-weight: bold;
+}
+
+.paginador {
+    align-items: center;
+}

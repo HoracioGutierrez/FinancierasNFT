@@ -995,4 +995,3 @@ export const contractAbi = [
 ]
 
 export const CONTRACT_ADDRESS="0x0495F68754eE81115c311A8Eb5296118eac27eB9";
-
