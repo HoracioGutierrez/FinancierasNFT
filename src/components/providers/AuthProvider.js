@@ -17,10 +17,6 @@ const AuthProvider = ({ children }) => {
     const [logging, setLogging] = useState(true)
     const [manualLogin, setManualLogin] = useState(false)
 
-    console.log({ state })
-    console.log({ logged })
-    console.log({ isWeb3Enabled })
-
     const getUserRole = async () => {
         const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
         const addr = user.get("ethAddress")
