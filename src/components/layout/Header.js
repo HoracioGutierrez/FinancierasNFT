@@ -1,15 +1,16 @@
 import { Navbar, Nav, Container, Button } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import { useContext } from 'react';
-import { context } from '../providers/AuthProvider';
+import useAuth from "../hooks/useAuth"
 import logo from "../../assets/logo_action-01.png";
 import campana from "../../assets/Vector.png";
+import { useMoralis } from 'react-moralis';
 
 const Header = () => {
 
-    const { logInToMoralis, user: { logged } } = useContext(context)
+    const { logInToMoralis, user: { logged } } = useAuth()
+    const { logout } = useMoralis()
 
-    const balanceYAccount = () => {}
+    const balanceYAccount = () => { }
 
     return (
         <Navbar bg="white" expand="lg" className="mi-navbar me-auto" id="mi-navbar" as="header">
@@ -27,6 +28,7 @@ const Header = () => {
                 </Navbar.Collapse>
                 {logged && <Navbar className="campana"><img src={campana} alt="bell" /></Navbar>}
                 {!logged ? <Button color='primary' onClick={logInToMoralis} id="connect-wallet"><p>Connect Wallet</p></Button> : balanceYAccount()}
+                {logged ? <Button color='primary' onClick={logout} id="disconnect-wallet"><p>Logout</p></Button> : balanceYAccount()}
             </Container>
         </Navbar>
     )

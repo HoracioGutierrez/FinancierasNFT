@@ -1,9 +1,13 @@
 import { Route, Switch, useHistory } from 'react-router-dom';
+import { PrivateRoute, PublicRoute } from '../CustomRoutes';
+import Start from '../pages/Start';
+import Dashboard from '../pages/Dashboard';
 
 const Main = () => {
     return (
         <Switch>
-            {/* <Route exact path="/" component={Start} /> */}
+            <PublicRoute exact path="/" component={Start} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
             {/* <Route exact path="/marketplace" component={Prueba} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/contract" component={Contract} />

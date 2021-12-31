@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { useMoralis } from "react-moralis"
+import { toast } from "react-toastify";
 import { contractAbi, CONTRACT_ADDRESS } from '../../abi';
 import { context as authContext } from "./Web3Provider"
 
@@ -14,6 +15,7 @@ const AuthProvider = ({ children }) => {
     const [role, setRole] = useState({ role : "undefined" , isAdmin : false , isFinanciera : false , isMinter : false , loading : false })
     const [logged, setLogged] = useState(false)
     const [logging, setLogging] = useState(true)
+    const [manualLogin , setManualLogin] = useState(false)
 
     const getUserRole = async () => {
         const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
@@ -32,10 +34,16 @@ const AuthProvider = ({ children }) => {
         })
         setLogged(true)
         setLogging(false)
+        setManualLogin(false)
+        toast.dismiss()
+        toast.success("Bienvenido!")
     }
 
     useEffect(() => {
         autoAuthenticationWeb3Enable()
+        if(state == "unauthenticated" && logged){
+            setLogged(false)
+        }
     }, [state])
 
     useEffect(() => {
@@ -46,15 +54,19 @@ const AuthProvider = ({ children }) => {
 
     const logInToMoralis = async () => {
         try {
+            setManualLogin(true)
             await authenticate()
         } catch (e) {
             console.log(e)
-            console.log(e.message)
+            toast.error("Hubo un error al iniciar sesión")
         }
     }
 
     const autoAuthenticationWeb3Enable = async () => {
         if (state === "authenticated" && !isWeb3Enabled) {
+            if(!manualLogin) {
+                toast.info("Autenticando con Metamask...")
+            }
             manuallyEnableWeb3()
         }
     }
