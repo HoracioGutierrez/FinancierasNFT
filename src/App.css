@@ -41,6 +41,14 @@ html , body , #root {
 
 }
 
+.page-subsection {
+  margin-bottom: 2rem;
+}
+
+.page-subsection input {
+  margin-top: 0!important;
+}
+
 
 
 body {
