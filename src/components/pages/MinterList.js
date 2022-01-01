@@ -6,7 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import {Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import Paper from "@mui/material/Paper";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useMoralis } from "react-moralis";
@@ -17,7 +17,7 @@ import useAuth from "../hooks/useAuth"
 const MinterList = () => {
 
     const { web3 } = useMoralis()
-    const {user:{moralisInterface:user}} = useAuth()
+    const { user: { moralisInterface: user } } = useAuth()
     const [minters, setMinters] = useState([]);
     const [referencia, setReferencia] = useState("")
     const [address, setAddress] = useState("")
@@ -33,7 +33,7 @@ const MinterList = () => {
     const deleteMinter = async (address) => {
         setLoading(true)
         const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
-        const receipt = await contract.methods.removeMinterRole(address).send({from: user.attributes.ethAddress})
+        const receipt = await contract.methods.removeMinterRole(address).send({ from: user.attributes.ethAddress })
         setLoading(false)
     }
 
@@ -57,8 +57,9 @@ const MinterList = () => {
 
 
     return (
-        <Page title="Administrador" subtitle="Lista de Minters">
+        <Page title="Administrador" id="minter-list-page">
             <div className="page-subsection">
+                <h2>Lista de Minters</h2>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
@@ -94,7 +95,8 @@ const MinterList = () => {
                 </TableContainer>
             </div>
             <div className="page-subsection">
-                <Form form={form} name="horizontal_login" layout="horizontal" >
+                <h2>Ingresar Minter</h2>
+                <Form form={form} id="minter-form" className="agregar-form" name="horizontal_login" layout="horizontal" >
 
                     <Form.Item
                         name="description"
@@ -125,18 +127,16 @@ const MinterList = () => {
                     </Form.Item>
 
                     <Form.Item shouldUpdate>
-                        {() => (
-                            <Button
-                                type="primary"
-                                onClick={(add)}
-                                disabled={
-                                    !form.isFieldsTouched(true) ||
-                                    !!form.getFieldsError().filter(({ errors }) => errors.length).length
-                                }
-                            >
-                                Ingresar Minter
-                            </Button>
-                        )}
+                        <Button
+                            type="primary"
+                            onClick={(add)}
+                            disabled={
+                                !form.isFieldsTouched(true) ||
+                                !!form.getFieldsError().filter(({ errors }) => errors.length).length
+                            }
+                        >
+                            Ingresar Minter
+                        </Button>
                     </Form.Item>
 
                 </Form>

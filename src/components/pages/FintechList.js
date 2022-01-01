@@ -5,7 +5,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Button from '@mui/material/Button';
+import {Button} from 'react-bootstrap';
 import Paper from "@mui/material/Paper";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useEffect, useState } from "react";
@@ -69,8 +69,9 @@ const FintechList = () => {
     }, [])
 
     return (
-        <Page title="Administrador" subtitle="Lista de Fintechs">
+        <Page title="Administrador" id="fintech-list-page">
             <div className="page-subsection">
+                <h2>Lista de Financieras</h2>
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
@@ -115,7 +116,8 @@ const FintechList = () => {
                 </TableContainer>
             </div>
             <div className="page-subsection">
-                <Form form={form} name="horizontal_login" layout="horizontal" >
+                <h2>Inresar Financiera</h2>
+                <Form form={form} id="financiera-form" name="horizontal_login" layout="horizontal" className="agregar-form" >
                     <Form.Item
                         name="address"
                         label="Fintech Address"
@@ -146,7 +148,6 @@ const FintechList = () => {
 
 
                     <Form.Item shouldUpdate>
-
                         <Button
                             type="primary"
                             onClick={(add)}

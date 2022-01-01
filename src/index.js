@@ -5,6 +5,7 @@ import { MoralisProvider } from "react-moralis";
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'antd/dist/antd.css';
 import "./App.scss"
 
 ReactDOM.render(
