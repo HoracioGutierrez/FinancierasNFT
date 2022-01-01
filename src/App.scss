@@ -1,0 +1,41 @@
+/*GLOBAL STYLES*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100vh;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}
+
+#root > main {
+    flex-grow: 1;
+    padding: 1rem;
+}
+/*END GLOBAL STYLES*/
+
+
+#layout-navbar {
+    width: 100%;
+}
+
+/*LANDING*/
+#landing {
+
+
+    svg {
+        width: 50%;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}
+/*END LANDING*/
