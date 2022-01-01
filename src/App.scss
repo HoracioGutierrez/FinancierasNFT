@@ -11,6 +11,10 @@ body,
     height: 100vh;
 }
 
+body {
+    overflow: hidden;
+}
+
 #root {
     display: flex;
     flex-direction: column;
@@ -18,7 +22,6 @@ body,
 
 #root > main {
     flex-grow: 1;
-    padding: 1rem;
 }
 /*END GLOBAL STYLES*/
 
@@ -35,6 +38,59 @@ body,
 #layout-header-logo {
     margin-left: -18px;
 }
+/*END HEADER STYLES*/
 
+/*MAIN STYLES*/
+#layout-main {
+    display: flex;
+    flex-direction: column;
+}
 
-#layout-main {}
+/*END MAIN STYLES*/
+
+/*LANDING STYLES*/
+#landing {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    > svg {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: all 0.3s ease;
+        @media screen and (min-width : 1000px) {
+            width: 60%;
+        }
+    }
+
+    > div {
+        width: 100%;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        svg {
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            @media screen and (min-width : 1000px) {
+                max-width: 700px;
+                opacity: 1;
+            }
+        }
+
+        #landing-banner {
+            position: absolute;
+            top: 20%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            @media screen and (min-width : 1000px) {
+                position: relative;
+                top: initial;
+            }
+        }
+    }
+}

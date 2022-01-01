@@ -4,17 +4,18 @@ import Start from '../pages/Start';
 import Dashboard from '../pages/Dashboard';
 import FintechList from '../pages/FintechList';
 import MinterList from '../pages/MinterList';
+import { Container } from 'react-bootstrap';
 
 const Main = () => {
     return (
-        <main id="layout-main">
+        <Container fluid as="main" id="layout-main">
             <Switch>
                 <PublicRoute exact path="/" component={Start} />
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <PrivateRoute exact path="/fintechlist" component={FintechList} />
                 <PrivateRoute exact path="/minterlist" component={MinterList} />
             </Switch>
-        </main>
+        </Container>
     )
 }
 

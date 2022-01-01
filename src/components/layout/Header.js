@@ -25,7 +25,7 @@ const Header = () => {
                         <Nav.Item className="d-lg-none nav-link" onClick={logout}>Logout</Nav.Item>
                     </Nav>
                 </Navbar.Collapse>}
-                {!logged ? <Button color='primary' onClick={logInToMoralis} id="connect-wallet">Connect Wallet</Button> : balanceYAccount()}
+                {!logged ? <Button color='primary' onClick={logInToMoralis} id="connect-wallet">Conectar Wallet</Button> : balanceYAccount()}
                 {logged ? <Button color='primary' className='d-none d-lg-inline-block' onClick={logout} id="disconnect-wallet">Logout</Button> : balanceYAccount()}
             </Container>
         </Navbar>
