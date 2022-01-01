@@ -1,4 +1,4 @@
-import './App.css';
+//import './App.css';
 import { MetaMaskProvider } from "metamask-react";
 import { MetamaskStateProvider } from "use-metamask";
 import AuthProvider from './components/providers/AuthProvider';

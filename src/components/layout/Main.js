@@ -7,7 +7,7 @@ import MinterList from '../pages/MinterList';
 
 const Main = () => {
     return (
-        <main>
+        <main id="layout-main">
             <Switch>
                 <PublicRoute exact path="/" component={Start} />
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
