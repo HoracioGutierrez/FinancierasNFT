@@ -15,18 +15,18 @@ const Header = () => {
         <Navbar bg="white" expand="lg" as="header" id="layout-header">
             <Container fluid>
                 <Navbar.Brand to="/" as={NavLink}>
-                    <img src={logo} alt="logo-action-fintech"/>
+                    <img id="layout-header-logo" src={logo} alt="logo-action-fintech"/>
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse id="basic-navbar-nav">
+                {logged && <Navbar.Toggle className='d-lg-none' aria-controls="basic-navbar-nav"/>}
+                {logged && <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        {logged && <Nav.Link to="/fintechlist" as={NavLink} >Fintechs</Nav.Link>}
-                        {logged && <Nav.Link to="/minterlist" as={NavLink}>Minters</Nav.Link>}
-                        {logged ? <Nav.Item className="d-lg-none nav-link" onClick={logout}>Logout</Nav.Item> : balanceYAccount()}
+                        <Nav.Link to="/fintechlist" as={NavLink} >Fintechs</Nav.Link>
+                        <Nav.Link to="/minterlist" as={NavLink}>Minters</Nav.Link>
+                        <Nav.Item className="d-lg-none nav-link" onClick={logout}>Logout</Nav.Item>
                     </Nav>
-                </Navbar.Collapse>
-                {!logged ? <Button color='primary' onClick={logInToMoralis} id="connect-wallet"><p>Connect Wallet</p></Button> : balanceYAccount()}
-                {logged ? <Button color='primary' className='d-none d-lg-inline-block' onClick={logout} id="disconnect-wallet"><p>Logout</p></Button> : balanceYAccount()}
+                </Navbar.Collapse>}
+                {!logged ? <Button color='primary' onClick={logInToMoralis} id="connect-wallet">Connect Wallet</Button> : balanceYAccount()}
+                {logged ? <Button color='primary' className='d-none d-lg-inline-block' onClick={logout} id="disconnect-wallet">Logout</Button> : balanceYAccount()}
             </Container>
         </Navbar>
     )

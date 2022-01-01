@@ -24,9 +24,17 @@ body,
 
 /*HEADER STYLES*/
 #layout-header {
-
+    padding-top: 0;
+    padding-bottom: 0;
+    .navbar-brand {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
+#layout-header-logo {
+    margin-left: -18px;
+}
 
 
 #layout-main {}
