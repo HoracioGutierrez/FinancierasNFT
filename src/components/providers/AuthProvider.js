@@ -21,7 +21,6 @@ const AuthProvider = ({ children }) => {
 
     const getUserRole = async () => {
 
-        console.log("getUserRole")
         const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
         const addr = user.get("ethAddress")
         setRole({ ...role, loading: true })
@@ -57,14 +56,25 @@ const AuthProvider = ({ children }) => {
     const autoAuthenticationWeb3Enable = async () => {
         if (state === "authenticated" && !isWeb3Enabled) {
             if (!manualLogin) {
-                toast.info("Autenticando con Metamask...")
+                toast.info("Cuenta previamente autenticada! Conectando...")
             }
             manuallyEnableWeb3()
         }
     }
 
+    const logInToMoralis = async () => {
+        try {
+            toast.info("Iniciando sesión...")
+            setManualLogin(true)
+            await authenticate()
+        } catch (e) {
+            console.log(e)
+            toast.error("Hubo un error al iniciar sesión")
+        }
+    }
 
-    
+
+
     useEffect(() => {
 
         autoAuthenticationWeb3Enable()
@@ -89,30 +99,24 @@ const AuthProvider = ({ children }) => {
     }, [isWeb3Enabled])
 
 
-
-
-    const logInToMoralis = async () => {
-        try {
-            setManualLogin(true)
-            await authenticate()
-        } catch (e) {
-            console.log(e)
-            toast.error("Hubo un error al iniciar sesión")
-        }
-    }
-
-
-
     useEffect(()=>{
         if(user){
             const currentUserAddr = user.get("ethAddress")
             const selectedAccount = account
             if(currentUserAddr != selectedAccount){
+                toast.info("Cambiando cuenta...")
                 logout()
                 authenticate()
             }
         }
     },[account])
+
+    /* useEffect(()=>{
+        if(isAuthenticating){
+            toast.dismiss()
+            toast.info("Autenticando...")
+        }
+    }) */
 
     const valorDelProvider = {
         logInToMoralis,
