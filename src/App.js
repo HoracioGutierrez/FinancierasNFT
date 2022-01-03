@@ -1,6 +1,3 @@
-//import './App.css';
-import { MetaMaskProvider } from "metamask-react";
-import { MetamaskStateProvider } from "use-metamask";
 import AuthProvider from './components/providers/AuthProvider';
 import Web3Provider from './components/providers/Web3Provider';
 import Layout from './components/layout/Layout';
@@ -8,15 +5,11 @@ import Layout from './components/layout/Layout';
 const App = () => {
 
     return (
-        <MetamaskStateProvider>
-            <MetaMaskProvider>
-                <Web3Provider>
-                    <AuthProvider>
-                        <Layout/>
-                    </AuthProvider>
-                </Web3Provider>
-            </MetaMaskProvider>
-        </MetamaskStateProvider>
+        <Web3Provider>
+            <AuthProvider>
+                <Layout />
+            </AuthProvider>
+        </Web3Provider>
     )
 }
 

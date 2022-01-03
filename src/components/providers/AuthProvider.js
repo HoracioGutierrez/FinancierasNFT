@@ -3,13 +3,14 @@ import { useMoralis } from "react-moralis"
 import { toast } from "react-toastify";
 import { contractAbi, CONTRACT_ADDRESS } from '../../abi';
 import { context as authContext } from "./Web3Provider"
+import Moralis from "moralis"
 
 export const context = createContext()
 const { Provider } = context
 
 const AuthProvider = ({ children }) => {
 
-    const { user, auth, authenticate, web3, isWeb3Enabled } = useMoralis()
+    const { user, auth, authenticate, web3, isWeb3Enabled , account , logout , isAuthenticating} = useMoralis()
     const { manuallyEnableWeb3 } = useContext(authContext)
     const { state } = auth
     const [role, setRole] = useState({ role: "undefined", isAdmin: false, isFinanciera: false, isMinter: false, loading: false })
@@ -17,30 +18,54 @@ const AuthProvider = ({ children }) => {
     const [logging, setLogging] = useState(true)
     const [manualLogin, setManualLogin] = useState(false)
 
+
     const getUserRole = async () => {
+
+        console.log("getUserRole")
         const contract = new web3.eth.Contract(contractAbi, CONTRACT_ADDRESS);
         const addr = user.get("ethAddress")
         setRole({ ...role, loading: true })
+
         const financiera_role = await contract.methods.isInRole("FINANCIERA_ROLE", addr).call({ from: addr })
         const minter_role = await contract.methods.isInRole("MINTER_ROLE", addr).call({ from: addr })
         const admin_role = await contract.methods.isInRole("DEFAULT_ADMIN_ROLE", addr).call({ from: addr })
-        setRole({
-            ...role,
-            loading: false,
-            isAdmin: admin_role,
-            isFinanciera: financiera_role,
-            isMinter: minter_role,
-            role: financiera_role ? "financiera" : minter_role ? "minter" : admin_role ? "admin" : "undefined"
-        })
-        setLogged(true)
-        setLogging(false)
-        setManualLogin(false)
-        toast.dismiss()
-        toast.success("Bienvenido!")
+
+        if (financiera_role || minter_role || admin_role) {
+            setRole({
+                ...role,
+                loading: false,
+                isAdmin: admin_role,
+                isFinanciera: financiera_role,
+                isMinter: minter_role,
+                role: financiera_role ? "financiera" : minter_role ? "minter" : admin_role ? "admin" : "undefined"
+            })
+            setLogged(true)
+            setLogging(false)
+            setManualLogin(false)
+            toast.dismiss()
+            toast.success("Bienvenido!")
+        } else {
+            setRole({ ...role, loading: false, isAdmin: false, isFinanciera: false, isMinter: false, role: "undefined" })
+            setLogged(false)
+            setLogging(false)
+            setManualLogin(false)
+            toast.dismiss()
+            toast.error("No tienes permisos para acceder a esta página")
+        }
     }
 
-    useEffect(() => {
+    const autoAuthenticationWeb3Enable = async () => {
+        if (state === "authenticated" && !isWeb3Enabled) {
+            if (!manualLogin) {
+                toast.info("Autenticando con Metamask...")
+            }
+            manuallyEnableWeb3()
+        }
+    }
 
+
+    
+    useEffect(() => {
 
         autoAuthenticationWeb3Enable()
 
@@ -55,11 +80,16 @@ const AuthProvider = ({ children }) => {
 
     }, [state])
 
+
+
     useEffect(() => {
         if (isWeb3Enabled) {
             getUserRole()
         }
     }, [isWeb3Enabled])
+
+
+
 
     const logInToMoralis = async () => {
         try {
@@ -71,14 +101,18 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    const autoAuthenticationWeb3Enable = async () => {
-        if (state === "authenticated" && !isWeb3Enabled) {
-            if (!manualLogin) {
-                toast.info("Autenticando con Metamask...")
+
+
+    useEffect(()=>{
+        if(user){
+            const currentUserAddr = user.get("ethAddress")
+            const selectedAccount = account
+            if(currentUserAddr != selectedAccount){
+                logout()
+                authenticate()
             }
-            manuallyEnableWeb3()
         }
-    }
+    },[account])
 
     const valorDelProvider = {
         logInToMoralis,

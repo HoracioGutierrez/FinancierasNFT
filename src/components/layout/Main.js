@@ -1,19 +1,13 @@
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { PrivateRoute, PublicRoute } from '../CustomRoutes';
-import Start from '../pages/Start';
-import Dashboard from '../pages/Dashboard';
-import FintechList from '../pages/FintechList';
-import MinterList from '../pages/MinterList';
 import { Container } from 'react-bootstrap';
+import routes from '../../rutes';
 
 const Main = () => {
     return (
         <Container fluid as="main" id="layout-main">
             <Switch>
-                <PublicRoute exact path="/" component={Start} />
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <PrivateRoute exact path="/fintechlist" component={FintechList} />
-                <PrivateRoute exact path="/minterlist" component={MinterList} />
+                {routes.map((ruta,i)=> ruta.public ? <PublicRoute key={i} {...ruta} /> : <PrivateRoute key={i} {...ruta} />)}
             </Switch>
         </Container>
     )

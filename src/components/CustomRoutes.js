@@ -11,11 +11,16 @@ export const PublicRoute = ({ component : Component , ...props }) => {
     }
 }
 
-export const PrivateRoute = ({ component : Component , ...props }) => {
-    const { user: { logged } } = useAuth()
-    if(!logged){
+export const PrivateRoute = ({ component : Component , path , privilege ,  ...props }) => {
+
+    const { user: { logged , role } } = useAuth()
+
+    const isInRole = privilege.includes(role)
+    
+    if(!isInRole){
         return <Redirect to="/"/>
     }else{
         return <Route {...props} component={Component} />
     }
 }
+
